@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+Directory.Build.props
+build/
+dist/PztGenerator-Revit2025/*.dll
+dist/PztGenerator-Revit2025/*.pdb
+dist/PztGenerator-Revit2025/*.deps.json

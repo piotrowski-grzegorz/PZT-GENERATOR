@@ -1,0 +1,38 @@
+<Window x:Class="PztGenerator.AssignPztPresetWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PZT - przypisz typ"
+        Width="420"
+        Height="250"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner">
+    <StackPanel Margin="16">
+        <TextBlock Text="{Binding SelectionText}"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,12" />
+        <TextBlock Text="Typ PZT"
+                   Margin="0,0,0,4" />
+        <ComboBox ItemsSource="{Binding Presets}"
+                  SelectedItem="{Binding SelectedPreset}"
+                  DisplayMemberPath="Name"
+                  Height="28" />
+        <TextBlock Text="{Binding PresetDescription}"
+                   TextWrapping="Wrap"
+                   Margin="0,12,0,0"
+                   Foreground="#555555" />
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,22,0,0">
+            <Button Content="Anuluj"
+                    Width="84"
+                    Height="28"
+                    Margin="0,0,8,0"
+                    IsCancel="True" />
+            <Button Content="Przypisz"
+                    Width="84"
+                    Height="28"
+                    IsDefault="True"
+                    Click="AssignButton_Click" />
+        </StackPanel>
+    </StackPanel>
+</Window>

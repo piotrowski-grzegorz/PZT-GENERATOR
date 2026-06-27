@@ -1,0 +1,70 @@
+<Window x:Class="PztGenerator.ParkingSettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PZT - parking"
+        Width="430"
+        Height="280"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner">
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="Parametry miejsc parkingowych"
+                       FontSize="16"
+                       FontWeight="SemiBold" />
+            <TextBlock Text="{Binding ParkingAreaText}"
+                       Margin="0,4,0,0"
+                       Foreground="#555555" />
+        </StackPanel>
+
+        <Grid Grid.Row="1" Margin="0,16,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="90" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="34" />
+                <RowDefinition Height="34" />
+                <RowDefinition Height="34" />
+                <RowDefinition Height="34" />
+                <RowDefinition Height="34" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Szerokosc zwyklego miejsca [m]" VerticalAlignment="Center" />
+            <TextBox Grid.Column="1" Text="{Binding RegularWidthText, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Grid.Row="1" Text="Dlugosc zwyklego miejsca [m]" VerticalAlignment="Center" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding RegularLengthText, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Grid.Row="2" Text="Liczba miejsc dla niepelnosprawnych" VerticalAlignment="Center" />
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding AccessibleCountText, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Grid.Row="3" Text="Szerokosc miejsca N [m]" VerticalAlignment="Center" />
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding AccessibleWidthText, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Grid.Row="4" Text="Dlugosc miejsca N [m]" VerticalAlignment="Center" />
+            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding AccessibleLengthText, UpdateSourceTrigger=PropertyChanged}" />
+        </Grid>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,14,0,0">
+            <Button Content="OK"
+                    Width="90"
+                    Height="28"
+                    Margin="0,0,8,0"
+                    IsDefault="True"
+                    Click="OkButton_Click" />
+            <Button Content="Anuluj"
+                    Width="90"
+                    Height="28"
+                    IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</Window>
