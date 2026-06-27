@@ -1,97 +1,107 @@
 # PZT Generator
 
-Pierwszy prototyp wtyczki do Revit 2025.03. Na tym etapie dodatek czyta natywne obszary Revita (`Areas`) i pokazuje prosty bilans powierzchni pogrupowany po parametrze `PZT_Kategoria`.
+Prototyp wtyczki do Autodesk Revit 2025.03 wspierajacej bilans PZT: granica dzialki, zabudowa, dojazdy, dojscia, parkingi, PBC oraz podstawowa walidacja MPZP.
 
-## Zakres MVP
+GT-02 jest prototypem funkcjonalnym, a GT-03 stabilizuje kod i dokumentacje dla wersji `0.2.0`. To nie jest jeszcze wersja produkcyjna ani komercyjny instalator.
+
+## Aktualny ribbon
+
+Zakladka `PZT`, panel `Bilans`:
+
+- `Przygotuj PZT` - dodaje parametry projektu PZT.
+- `Przypisz typ` - przypisuje zaznaczonym obszarom/regionom staly typ PZT i domyslne parametry.
+- `MPZP` - ustawia wymagania MPZP uzywane do walidacji bilansu PZT.
+- `Bilans obszarow` - otwiera raport, walidacje, ustawienia MPZP, parking, typy i grafike.
+
+## Zakres prototypu
 
 - Revit 2025 / .NET 8
-- zakladka `PZT` w ribbonie
-- przycisk `Przygotuj PZT`, ktory dodaje parametry do obszarow
-- przycisk `Przypisz typ`, ktory ustawia gotowe kategorie PZT na zaznaczonych obszarach
-- przycisk `MPZP`, ktory zapisuje wymagania planu miejscowego w informacjach o projekcie
-- przycisk `Bilans obszarow`
-- odczyt obszarow z modelu
-- suma powierzchni w m2 wedlug parametru `PZT_Kategoria`
-- wyliczenie powierzchni biologicznie czynnej z parametru `PZT_Wspolczynnik_Bio`
-- czytelne okno tabelaryczne bilansu
-- eksport bilansu do pliku CSV
-- raport wskaznikow urbanistycznych:
-  - powierzchnia zabudowy
-  - wskaznik powierzchni zabudowy
-  - powierzchnia biologicznie czynna
-  - wskaznik PBC
-  - powierzchnia calkowita
-  - intensywnosc zabudowy
-- walidacja wzgledem wymagan MPZP
+- odczyt natywnych `Areas` oraz `FilledRegion`
+- slownik stalych typow PZT zamiast dowolnego wpisywania kategorii
+- bilans powierzchni wedlug kategorii i statusu
+- powierzchnia dzialki z typu `Granica terenu / dzialki`
+- powierzchnia zabudowy i wskaznik zabudowy
+- powierzchnia biologicznie czynna i wskaznik PBC
+- powierzchnia calkowita i intensywnosc zabudowy
+- miejsca parkingowe liczone z powierzchni parkingu i ustawien miejsc
+- walidacja min/max MPZP z opisem rachunku
+- style wypelnien i obwiedni regionow `pztGen_*`
+- eksport raportu do CSV
 
-## Jak przygotowac model testowy
+## Workflow testowy
 
-1. W Revicie utworz `Area Plan`.
-2. Narysuj kilka `Areas`.
-3. Kliknij `PZT > Przygotuj PZT`, zeby dodac parametry.
-4. Zaznacz obszar lub kilka obszarow i kliknij `PZT > Przypisz typ`.
-5. Wybierz np.:
-   - `Granica terenu / dzialki`
-   - `Zabudowa projektowana`
-   - `Zabudowa istniejaca`
-   - `Dojazdy`
-   - `Parking`
-   - `Biologicznie czynna`
-6. Kliknij `PZT > MPZP` i wpisz wymagania planu miejscowego.
-7. Uruchom przycisk `PZT > Bilans obszarow`.
+1. Uruchom Revit 2025.
+2. Otworz lub przygotuj widok PZT.
+3. Narysuj regiony wypelnienia dla:
+   - granicy terenu,
+   - zabudowy,
+   - dojazdow/dojsc,
+   - parkingu,
+   - obszarow PBC lub czesciowo biologicznie czynnych.
+4. Kliknij `PZT > Przygotuj PZT`.
+5. Zaznacz region i kliknij `PZT > Przypisz typ`.
+6. Dla granicy wybierz `Granica terenu / dzialki`.
+7. Dla budynkow wybierz `Zabudowa projektowana` albo `Zabudowa istniejaca`.
+8. Kliknij `PZT > MPZP` i wpisz wymagania planu.
+9. Kliknij `PZT > Bilans obszarow`.
+10. W zakladce `Typy` mozesz zmienic kondygnacje, wysokosc kondygnacji i wspolczynnik PBC dla zaznaczonych regionow.
+11. W zakladce `Grafika` uzyj `Zastosuj style do regionow`, jezeli trzeba odswiezyc wypelnienia i obwiednie.
 
-Powierzchnia dzialki jest liczona z obszaru przypisanego jako `Granica terenu / dzialki`. W MPZP procenty sa od razu przeliczane na m2 na podstawie tej powierzchni.
-
-Nie wpisuj recznie dowolnych wartosci w `PZT_Kategoria`. Do przypisywania uzywaj przycisku `Przypisz typ`, bo raport rozpoznaje tylko stale typy PZT. Jezeli parametr jest pusty, obszar trafi do grupy `Bez kategorii`. Jezeli wpisano wartosc spoza slownika, trafi do `Nieprzypisane / bledne`.
-
-## Konfiguracja sciezki do Revita
-
-Projekt zaklada standardowa lokalizacje Revita:
-
-`C:\Program Files\Autodesk\Revit 2025`
-
-Jezeli Revit jest zainstalowany gdzie indziej, znajdz `RevitAPI.dll`:
-
-```powershell
-.\tools\Find-RevitApi.ps1
-```
-
-Potem zbuduj projekt z parametrem:
-
-```powershell
-dotnet build .\src\PztGenerator\PztGenerator.csproj -c Debug /p:RevitInstallDir="C:\Twoja\Sciezka\Do\Revit 2025"
-```
-
-Mozesz tez skopiowac `Directory.Build.props.example` do `Directory.Build.props` i wpisac tam wlasciwa sciezke. Ten plik jest ignorowany przez git, bo zalezy od konkretnego komputera.
+Nie wpisuj recznie dowolnych wartosci w `PZT_Kategoria`. Raport rozpoznaje tylko stale typy PZT nadawane przez wtyczke.
 
 ## Budowanie
 
-Budowanie:
+Domyslna sciezka Revita to:
 
 ```powershell
-dotnet build .\src\PztGenerator\PztGenerator.csproj -c Debug
+C:\Program Files\Autodesk\Revit 2025
 ```
+
+Jesli Revit jest w innej lokalizacji:
+
+```powershell
+dotnet build .\src\PztGenerator\PztGenerator.csproj -c Release /p:RevitInstallDir="E:\Program Files\Autodesk\Revit 2025"
+```
+
+Mozesz tez skopiowac `Directory.Build.props.example` do `Directory.Build.props` i wpisac lokalna sciezke. Ten plik jest ignorowany przez Git.
+
+## Testy
+
+Projekt `tests\PztGenerator.Tests` jest lekkim runnerem konsolowym bez zewnetrznego frameworka testowego.
+
+```powershell
+dotnet run --project .\tests\PztGenerator.Tests\PztGenerator.Tests.csproj -c Release /p:RevitInstallDir="E:\Program Files\Autodesk\Revit 2025"
+```
+
+Testy obejmuja:
+
+- PBC,
+- wskaznik zabudowy,
+- intensywnosc,
+- walidacje min/max MPZP.
 
 ## Instalacja lokalna
 
-Po zbudowaniu uruchom:
+Po zbudowaniu:
 
 ```powershell
 .\tools\Install-Addin.ps1
 ```
 
-Skrypt utworzy plik `.addin` w:
+Skrypt tworzy plik `.addin` w:
 
-`%AppData%\Autodesk\Revit\Addins\2025`
+```powershell
+%AppData%\Autodesk\Revit\Addins\2025
+```
 
 Po restarcie Revita powinna pojawic sie zakladka `PZT`.
 
-## Kolejne kroki
+## Poza zakresem GT-03
 
-Najpierw warto dopracowac slownik kategorii i parametry. Dopiero potem dodac:
-
-- okno tabelaryczne zamiast prostego komunikatu,
-- narzedzie do automatycznego dodawania parametru `PZT_Kategoria`,
-- eksport do Excela/CSV,
-- automatyczne odswiezanie bilansu po zmianach modelu,
-- instalator dla innych komputerow.
+- XLSX,
+- PDF,
+- AI,
+- analiza chlonnosci,
+- licencjonowanie,
+- komercyjny instalator,
+- automatyczne odswiezanie realtime.

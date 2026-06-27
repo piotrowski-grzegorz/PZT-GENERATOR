@@ -61,6 +61,18 @@ public sealed class App : IExternalApplication
 
         AddButtonIfMissing(panel, assignButtonData);
 
+        var mpzpButtonData = new PushButtonData(
+            "PztMpzpSettings",
+            "MPZP",
+            assemblyPath,
+            typeof(MpzpSettingsCommand).FullName);
+
+        mpzpButtonData.ToolTip = "Ustawia wymagania MPZP używane do walidacji bilansu PZT.";
+        mpzpButtonData.LargeImage = RibbonIconFactory.Create("M", Color.FromRgb(217, 119, 6));
+        mpzpButtonData.Image = mpzpButtonData.LargeImage;
+
+        AddButtonIfMissing(panel, mpzpButtonData);
+
         var balanceButtonData = new PushButtonData(
             "PztAreaBalance",
             "Bilans\nobszarow",

@@ -1,6 +1,6 @@
 namespace PztGenerator;
 
-internal static class PztCategories
+public static class PztCategories
 {
     public const string SiteBoundary = "Granica terenu";
     public const string Building = "Zabudowa";

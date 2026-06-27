@@ -2,6 +2,13 @@
 
 ## Aktualna wersja prototypu
 
+- sprint GT-03:
+  - dodano przycisk `MPZP` do ribbonu
+  - wydzielono `PztBalanceService`
+  - wydzielono `MpzpValidationService`
+  - dodano lekki projekt testowy `PztGenerator.Tests`
+  - dodano `PROJECT_STATUS.md`
+  - zaktualizowano README
 - zakladka `PZT` w Revicie
 - przycisk `Przygotuj PZT`
 - przycisk `Przypisz typ`
