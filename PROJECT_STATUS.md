@@ -5,6 +5,7 @@
 - Wersja prototypu: `0.2.0-gt03`
 - Revit: 2025 / 2025.03
 - Status: prototyp funkcjonalny, nie produkcyjny
+- Obowiazek procesu: po kazdym zakonczonym zadaniu Codex aktualizuje ten plik.
 
 ## Ukonczone funkcje
 
@@ -31,6 +32,7 @@
 
 ## Nastepne zadania
 
+- GT-004: utrzymac `PROJECT_STATUS.md` jako zrodlo prawdy po kazdej zmianie.
 - Uporzadkowac parametryzacje typow i zapis ustawien globalnych projektu.
 - Doprecyzowac model parkingow i wymagan parkingowych.
 - Poprawic UX zakladek `Typy` i `Grafika`.
@@ -41,3 +43,4 @@
 
 - GT-02: zakonczony jako prototyp funkcjonalny `v0.2`.
 - GT-03: zakonczony w kodzie; zakres obejmuje ribbon MPZP, serwisy bilansu i walidacji, testy oraz dokumentacje.
+- GT-004: gotowe jako zasada procesu; kazde kolejne zadanie musi konczyc sie aktualizacja `PROJECT_STATUS.md`.
