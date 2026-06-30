@@ -6,6 +6,8 @@ Sprawdzamy workflow i logike bilansu PZT w prototypie `0.2.1-mvp-test` dla Revit
 
 ## Przed testem
 
+- Zainstaluj wtyczke z paczki `PztGenerator-0.2.1-mvp-test-installer.zip`.
+- Po rozpakowaniu kliknij `INSTALUJ_PZT_GENERATOR.bat` i podaj sciezke folderu Revit 2025.
 - Uruchom Revit ponownie po instalacji wtyczki.
 - Sprawdz, czy widoczna jest zakladka `PZT`.
 - Testuj na kopii modelu albo na prostym pliku testowym.

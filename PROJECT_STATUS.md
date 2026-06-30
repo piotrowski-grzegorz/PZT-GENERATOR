@@ -20,6 +20,8 @@
 - Eksport CSV.
 - Eksport DOCX bilansu jako tabelaryczny raport.
 - Eksport DOCX walidacji MPZP z lista warunkow i statusem spelnienia.
+- Prosty instalator testerski ZIP: `dist/PztGenerator-0.2.1-mvp-test-installer.zip`.
+- Instrukcja instalacji i minimalnego testu w paczce instalacyjnej.
 - Serwis `PztBalanceService` dla budowania raportu.
 - Serwis `MpzpValidationService` dla walidacji MPZP.
 - Projekt `PztGenerator.Tests` z testami kalkulacji.
@@ -30,6 +32,7 @@
 
 - Brak automatycznego odswiezania raportu w czasie rzeczywistym po zmianie modelu.
 - Brak komercyjnego instalatora i podpisu kodu.
+- Instalator testerski jest prostym skryptem PowerShell/BAT, bez UI instalatora MSI/EXE.
 - Brak eksportu XLSX/PDF.
 - Eksport DOCX jest prostym raportem testowym MVP, bez szablonu firmowego.
 - Brak analizy chlonnosci i wariantowania urbanistycznego.
@@ -52,3 +55,4 @@
 - GT-004: gotowe jako zasada procesu; kazde kolejne zadanie musi konczyc sie aktualizacja `PROJECT_STATUS.md`.
 - MVP-HANDOFF: gotowe do pokazania testerom jako `0.2.1-mvp-test`; dodano instrukcje testera, widoczna informacje o prototypie i eksport DOCX.
 - GT-005: zakonczony w kodzie; dodano eksport DOCX i scalono walidacje z zakladka `MPZP`.
+- GT-006: zakonczony w kodzie; dodano prosty instalator testerski, deinstalator, ZIP i instrukcje testu.

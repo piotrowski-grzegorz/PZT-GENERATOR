@@ -6,6 +6,12 @@ GT-02 jest prototypem funkcjonalnym, a GT-03 stabilizuje kod i dokumentacje dla 
 
 Instrukcja dla testerow: `TESTER_GUIDE.md`.
 
+Paczka instalacyjna dla testerow:
+
+```text
+dist/PztGenerator-0.2.1-mvp-test-installer.zip
+```
+
 ## Aktualny ribbon
 
 Zakladka `PZT`, panel `Bilans`:
@@ -86,7 +92,31 @@ Testy obejmuja:
 - intensywnosc,
 - walidacje min/max MPZP.
 
-## Instalacja lokalna
+## Instalacja dla testera
+
+Najprostsza instalacja dla kolegi/testera:
+
+1. Przekaz paczke `dist/PztGenerator-0.2.1-mvp-test-installer.zip`.
+2. Tester rozpakowuje ZIP do dowolnego folderu.
+3. Tester klika `INSTALUJ_PZT_GENERATOR.bat`.
+4. Instalator pyta o sciezke folderu Revit 2025, np. `E:\Program Files\Autodesk\Revit 2025`.
+5. Po restarcie Revita powinna pojawic sie zakladka `PZT`.
+
+Instalator kopiuje DLL do:
+
+```powershell
+%AppData%\GRAFEL\PZT Generator\Revit2025
+```
+
+i tworzy manifest:
+
+```powershell
+%AppData%\Autodesk\Revit\Addins\2025\PztGenerator.addin
+```
+
+To jest prosty instalator testerski PowerShell/BAT, nie komercyjny instalator MSI/EXE.
+
+## Instalacja lokalna deweloperska
 
 Po zbudowaniu:
 

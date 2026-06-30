@@ -25,15 +25,27 @@
 - bledne reczne wartosci `PZT_Kategoria` sa oznaczane jako `Nieprzypisane / bledne`
 - przyciski ribbonu maja ikony
 - eksport bilansu do CSV
+- eksport bilansu do DOCX
+- eksport walidacji MPZP do DOCX
 
 ## Instalacja z paczki
 
-1. Skopiuj folder `dist\PztGenerator-Revit2025` na komputer z Revit 2025.
-2. Uruchom PowerShell w tym folderze.
-3. Wykonaj:
+Najprostsza metoda dla testera:
+
+1. Rozpakuj paczke ZIP do dowolnego folderu.
+2. Zamknij Revit.
+3. Kliknij dwa razy `INSTALUJ_PZT_GENERATOR.bat`.
+4. Podaj sciezke folderu Revit 2025, np. `E:\Program Files\Autodesk\Revit 2025`.
+5. Uruchom ponownie Revit 2025.
+
+Alternatywnie z PowerShell:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\Install-Release.ps1
+powershell -ExecutionPolicy Bypass -File .\Install-PZT-Generator.ps1
 ```
 
-4. Uruchom ponownie Revit 2025.
+Odinstalowanie:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\Uninstall-PZT-Generator.ps1
+```
