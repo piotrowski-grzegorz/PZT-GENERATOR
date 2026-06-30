@@ -19,6 +19,11 @@
                        Margin="0,2,0,0"
                        FontSize="11"
                        Foreground="#777777" />
+            <TextBlock Text="{Binding PrototypeNoticeText}"
+                       Margin="0,2,0,0"
+                       FontSize="11"
+                       Foreground="#8A5A00"
+                       TextWrapping="Wrap" />
         </StackPanel>
 
         <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">

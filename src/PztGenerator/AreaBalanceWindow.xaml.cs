@@ -167,6 +167,7 @@ public sealed class AreaBalanceViewModel
         ParkingSettingsText = $"Zwykle miejsce: {report.ParkingSettings.RegularSpaceWidthMeters:N2} x {report.ParkingSettings.RegularSpaceLengthMeters:N2} m = {report.ParkingSettings.RegularSpaceAreaSquareMeters:N2} m2. Miejsce N: {report.ParkingSettings.AccessibleSpaceWidthMeters:N2} x {report.ParkingSettings.AccessibleSpaceLengthMeters:N2} m = {report.ParkingSettings.AccessibleSpaceAreaSquareMeters:N2} m2.";
         MpzpSettings = new MpzpSettingsViewModel(report.Requirements, report.SiteAreaSquareMeters);
         BuildText = $"Build: {GetBuildText()}";
+        PrototypeNoticeText = "MVP / prototyp testowy - wyniki sluza do sprawdzenia workflow i logiki bilansu, nie do finalnej dokumentacji.";
         ValidationMessages = new ObservableCollection<ValidationMessageViewModel>(
             report.ValidationMessages.Select(message => new ValidationMessageViewModel(message)));
         GraphicRows = new ObservableCollection<PztGraphicStyleViewModel>(
@@ -206,6 +207,8 @@ public sealed class AreaBalanceViewModel
     public MpzpSettingsViewModel MpzpSettings { get; }
 
     public string BuildText { get; }
+
+    public string PrototypeNoticeText { get; }
 
     public ObservableCollection<ValidationMessageViewModel> ValidationMessages { get; }
 

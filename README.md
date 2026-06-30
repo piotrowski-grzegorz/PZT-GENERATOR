@@ -2,7 +2,9 @@
 
 Prototyp wtyczki do Autodesk Revit 2025.03 wspierajacej bilans PZT: granica dzialki, zabudowa, dojazdy, dojscia, parkingi, PBC oraz podstawowa walidacja MPZP.
 
-GT-02 jest prototypem funkcjonalnym, a GT-03 stabilizuje kod i dokumentacje dla wersji `0.2.0`. To nie jest jeszcze wersja produkcyjna ani komercyjny instalator.
+GT-02 jest prototypem funkcjonalnym, a GT-03 stabilizuje kod i dokumentacje dla wersji `0.2.0`. Wersja `0.2.0-mvp-test` jest przeznaczona do testow wewnetrznych. To nie jest jeszcze wersja produkcyjna ani komercyjny instalator.
+
+Instrukcja dla testerow: `TESTER_GUIDE.md`.
 
 ## Aktualny ribbon
 
