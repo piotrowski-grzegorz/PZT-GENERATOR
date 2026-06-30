@@ -2,7 +2,7 @@
 
 Prototyp wtyczki do Autodesk Revit 2025.03 wspierajacej bilans PZT: granica dzialki, zabudowa, dojazdy, dojscia, parkingi, PBC oraz podstawowa walidacja MPZP.
 
-GT-02 jest prototypem funkcjonalnym, a GT-03 stabilizuje kod i dokumentacje dla wersji `0.2.0`. Wersja `0.2.0-mvp-test` jest przeznaczona do testow wewnetrznych. To nie jest jeszcze wersja produkcyjna ani komercyjny instalator.
+GT-02 jest prototypem funkcjonalnym, a GT-03 stabilizuje kod i dokumentacje dla wersji `0.2.0`. Wersja `0.2.1-mvp-test` jest przeznaczona do testow wewnetrznych. To nie jest jeszcze wersja produkcyjna ani komercyjny instalator.
 
 Instrukcja dla testerow: `TESTER_GUIDE.md`.
 
@@ -27,8 +27,10 @@ Zakladka `PZT`, panel `Bilans`:
 - powierzchnia calkowita i intensywnosc zabudowy
 - miejsca parkingowe liczone z powierzchni parkingu i ustawien miejsc
 - walidacja min/max MPZP z opisem rachunku
+- wymagania i walidacja MPZP w jednej zakladce `MPZP`
 - style wypelnien i obwiedni regionow `pztGen_*`
-- eksport raportu do CSV
+- eksport raportu do CSV i DOCX
+- eksport listy warunkow MPZP do DOCX
 
 ## Workflow testowy
 
@@ -47,7 +49,9 @@ Zakladka `PZT`, panel `Bilans`:
 8. Kliknij `PZT > MPZP` i wpisz wymagania planu.
 9. Kliknij `PZT > Bilans obszarow`.
 10. W zakladce `Typy` mozesz zmienic kondygnacje, wysokosc kondygnacji i wspolczynnik PBC dla zaznaczonych regionow.
-11. W zakladce `Grafika` uzyj `Zastosuj style do regionow`, jezeli trzeba odswiezyc wypelnienia i obwiednie.
+11. W zakladce `MPZP` sprawdz liste warunkow i uzyj `Eksport MPZP DOCX`, jezeli chcesz zapisac sama walidacje.
+12. Uzyj `Eksport DOCX`, jezeli chcesz zapisac caly bilans jako raport tabelaryczny.
+13. W zakladce `Grafika` uzyj `Zastosuj style do regionow`, jezeli trzeba odswiezyc wypelnienia i obwiednie.
 
 Nie wpisuj recznie dowolnych wartosci w `PZT_Kategoria`. Raport rozpoznaje tylko stale typy PZT nadawane przez wtyczke.
 
@@ -98,7 +102,7 @@ Skrypt tworzy plik `.addin` w:
 
 Po restarcie Revita powinna pojawic sie zakladka `PZT`.
 
-## Poza zakresem GT-03
+## Poza zakresem GT-03 / MVP
 
 - XLSX,
 - PDF,

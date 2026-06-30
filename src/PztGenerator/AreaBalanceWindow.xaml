@@ -35,6 +35,11 @@
                         Height="28"
                         Margin="0,0,8,0"
                         Click="ExportCsvButton_Click" />
+                <Button Content="Eksport DOCX"
+                        Width="110"
+                        Height="28"
+                        Margin="0,0,8,0"
+                        Click="ExportDocxButton_Click" />
                 <Button Content="Zamknij"
                         Width="92"
                         Height="28"
@@ -110,26 +115,6 @@
                 </DockPanel>
             </TabItem>
 
-            <TabItem Header="Walidacja MPZP">
-                <ScrollViewer Margin="0,10,0,0" VerticalScrollBarVisibility="Auto">
-                    <ItemsControl ItemsSource="{Binding ValidationMessages}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border BorderBrush="#D0D0D0"
-                                        BorderThickness="1"
-                                        Background="{Binding Background}"
-                                        Padding="10"
-                                        Margin="0,0,0,6">
-                                    <TextBlock Text="{Binding Text}"
-                                               Foreground="{Binding Foreground}"
-                                               TextWrapping="Wrap" />
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-            </TabItem>
-
             <TabItem Header="MPZP">
                 <DockPanel Margin="0,10,0,0">
                     <StackPanel DockPanel.Dock="Top">
@@ -145,46 +130,75 @@
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Right"
                                 Margin="0,14,0,0">
+                        <Button Content="Eksport MPZP DOCX"
+                                Width="140"
+                                Height="28"
+                                Margin="0,0,8,0"
+                                Click="ExportMpzpDocxButton_Click" />
                         <Button Content="Zapisz MPZP"
                                 Width="110"
                                 Height="28"
                                 Click="SaveMpzpButton_Click" />
                     </StackPanel>
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="120" />
-                            <ColumnDefinition Width="180" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="34" />
-                            <RowDefinition Height="34" />
-                            <RowDefinition Height="34" />
-                            <RowDefinition Height="34" />
-                            <RowDefinition Height="34" />
-                        </Grid.RowDefinitions>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="180" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="34" />
+                                    <RowDefinition Height="34" />
+                                    <RowDefinition Height="34" />
+                                    <RowDefinition Height="34" />
+                                    <RowDefinition Height="34" />
+                                </Grid.RowDefinitions>
 
-                        <TextBlock Text="Min. powierzchnia biologicznie czynna [%]" VerticalAlignment="Center" />
-                        <TextBox Grid.Column="1" Text="{Binding MpzpSettings.MinBioPercent, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
-                        <TextBlock Grid.Column="2" Text="{Binding MpzpSettings.RequiredMinBioAreaText}" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#555555" />
+                                <TextBlock Text="Min. powierzchnia biologicznie czynna [%]" VerticalAlignment="Center" />
+                                <TextBox Grid.Column="1" Text="{Binding MpzpSettings.MinBioPercent, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
+                                <TextBlock Grid.Column="2" Text="{Binding MpzpSettings.RequiredMinBioAreaText}" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#555555" />
 
-                        <TextBlock Grid.Row="1" Text="Min. powierzchnia zabudowy [%]" VerticalAlignment="Center" />
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MpzpSettings.MinBuildingCoveragePercent, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
-                        <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding MpzpSettings.RequiredMinBuildingAreaText}" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#555555" />
+                                <TextBlock Grid.Row="1" Text="Min. powierzchnia zabudowy [%]" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MpzpSettings.MinBuildingCoveragePercent, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
+                                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding MpzpSettings.RequiredMinBuildingAreaText}" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#555555" />
 
-                        <TextBlock Grid.Row="2" Text="Max. powierzchnia zabudowy [%]" VerticalAlignment="Center" />
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MpzpSettings.MaxBuildingCoveragePercent, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
-                        <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding MpzpSettings.AllowedMaxBuildingAreaText}" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#555555" />
+                                <TextBlock Grid.Row="2" Text="Max. powierzchnia zabudowy [%]" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MpzpSettings.MaxBuildingCoveragePercent, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
+                                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding MpzpSettings.AllowedMaxBuildingAreaText}" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#555555" />
 
-                        <TextBlock Grid.Row="3" Text="Min. intensywnosc zabudowy" VerticalAlignment="Center" />
-                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding MpzpSettings.MinIntensity, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
-                        <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding MpzpSettings.RequiredMinGfaText}" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#555555" />
+                                <TextBlock Grid.Row="3" Text="Min. intensywnosc zabudowy" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding MpzpSettings.MinIntensity, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
+                                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding MpzpSettings.RequiredMinGfaText}" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#555555" />
 
-                        <TextBlock Grid.Row="4" Text="Max. intensywnosc zabudowy" VerticalAlignment="Center" />
-                        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding MpzpSettings.MaxIntensity, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
-                        <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding MpzpSettings.AllowedMaxGfaText}" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#555555" />
-                    </Grid>
+                                <TextBlock Grid.Row="4" Text="Max. intensywnosc zabudowy" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding MpzpSettings.MaxIntensity, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
+                                <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding MpzpSettings.AllowedMaxGfaText}" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#555555" />
+                            </Grid>
+
+                            <TextBlock Text="Walidacja MPZP"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Margin="0,18,0,8" />
+                            <ItemsControl ItemsSource="{Binding ValidationMessages}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="#D0D0D0"
+                                                BorderThickness="1"
+                                                Background="{Binding Background}"
+                                                Padding="10"
+                                                Margin="0,0,0,6">
+                                            <TextBlock Text="{Binding Text}"
+                                                       Foreground="{Binding Foreground}"
+                                                       TextWrapping="Wrap" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ScrollViewer>
                 </DockPanel>
             </TabItem>
 

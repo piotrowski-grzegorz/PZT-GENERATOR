@@ -2,7 +2,7 @@
 
 ## Cel testu
 
-Sprawdzamy workflow i logike bilansu PZT w prototypie `0.2.0-mvp-test` dla Revit 2025.03. To nie jest narzedzie do finalnej dokumentacji ani rozliczen formalnych.
+Sprawdzamy workflow i logike bilansu PZT w prototypie `0.2.1-mvp-test` dla Revit 2025.03. To nie jest narzedzie do finalnej dokumentacji ani rozliczen formalnych.
 
 ## Przed testem
 
@@ -25,8 +25,10 @@ Sprawdzamy workflow i logike bilansu PZT w prototypie `0.2.0-mvp-test` dla Revit
    - min. intensywnosc: `0.2`,
    - max. intensywnosc: `1.0`.
 9. Kliknij `PZT > Bilans obszarow`.
-10. Sprawdz zakladki `Bilans`, `Walidacja MPZP`, `MPZP`, `Typy`, `Grafika`.
-11. W zakladce `Grafika` kliknij `Zastosuj style do regionow` i sprawdz obwiednie oraz wypelnienia.
+10. Sprawdz zakladki `Bilans`, `MPZP`, `Parking`, `Typy`, `Grafika`.
+11. W zakladce `MPZP` sprawdz liste warunkow i zapisz `Eksport MPZP DOCX`.
+12. Zapisz caly raport przyciskiem `Eksport DOCX`.
+13. W zakladce `Grafika` kliknij `Zastosuj style do regionow` i sprawdz obwiednie oraz wypelnienia.
 
 ## Co tester ma ocenic
 
@@ -34,6 +36,7 @@ Sprawdzamy workflow i logike bilansu PZT w prototypie `0.2.0-mvp-test` dla Revit
 - Czy nazwy kategorii PZT sa jasne.
 - Czy bilans pokazuje oczekiwane wartosci.
 - Czy walidacja MPZP czytelnie tlumaczy rachunek.
+- Czy eksport DOCX bilansu i MPZP jest czytelny dla testowego raportu.
 - Czy grafika regionow pomaga w pracy na rysunku.
 - Czy komunikaty bledow wystarczaja, gdy brakuje granicy dzialki albo typu PZT.
 

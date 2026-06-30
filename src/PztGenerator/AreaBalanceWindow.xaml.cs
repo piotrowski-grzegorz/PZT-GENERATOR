@@ -48,6 +48,46 @@ public partial class AreaBalanceWindow : Window
         MessageBox.Show(this, "Wyeksportowano bilans CSV.", "PZT", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
+    private void ExportDocxButton_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new SaveFileDialog
+        {
+            Title = "Eksport bilansu PZT",
+            FileName = $"Bilans_PZT_{DateTime.Now:yyyy-MM-dd_HH-mm}.docx",
+            Filter = "Word (*.docx)|*.docx|Wszystkie pliki (*.*)|*.*",
+            DefaultExt = ".docx",
+            AddExtension = true
+        };
+
+        if (dialog.ShowDialog(this) != true)
+        {
+            return;
+        }
+
+        PztDocxExporter.ExportBalance(viewModel.Report, viewModel.BuildText, dialog.FileName);
+        MessageBox.Show(this, "Wyeksportowano bilans DOCX.", "PZT", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void ExportMpzpDocxButton_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new SaveFileDialog
+        {
+            Title = "Eksport walidacji MPZP",
+            FileName = $"Warunki_MPZP_{DateTime.Now:yyyy-MM-dd_HH-mm}.docx",
+            Filter = "Word (*.docx)|*.docx|Wszystkie pliki (*.*)|*.*",
+            DefaultExt = ".docx",
+            AddExtension = true
+        };
+
+        if (dialog.ShowDialog(this) != true)
+        {
+            return;
+        }
+
+        PztDocxExporter.ExportMpzpValidation(viewModel.Report, viewModel.BuildText, dialog.FileName);
+        MessageBox.Show(this, "Wyeksportowano walidacje MPZP DOCX.", "PZT - MPZP", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
@@ -177,6 +217,8 @@ public sealed class AreaBalanceViewModel
     }
 
     public ObservableCollection<AreaBalanceRowViewModel> Rows { get; }
+
+    public UrbanReport Report => report;
 
     public string SummaryText { get; }
 
