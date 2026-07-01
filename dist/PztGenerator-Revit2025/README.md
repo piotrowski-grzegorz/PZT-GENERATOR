@@ -1,5 +1,7 @@
 # PZT Generator - Revit 2025
 
+Uwaga: paczka wymaga pelnej wersji Autodesk Revit 2025. Revit LT nie obsluguje klasycznych dodatkow Revit API, wiec PZT Generator nie zadziala pod Revit LT.
+
 ## Aktualna wersja prototypu
 
 - zakladka `PZT` w Revicie
@@ -35,7 +37,7 @@ Najprostsza metoda dla testera:
 1. Rozpakuj paczke ZIP do dowolnego folderu.
 2. Zamknij Revit.
 3. Kliknij dwa razy `INSTALUJ_PZT_GENERATOR.bat`.
-4. Podaj sciezke folderu Revit 2025, np. `E:\Program Files\Autodesk\Revit 2025`.
+4. Podaj sciezke folderu pelnego Revit 2025, np. `E:\Program Files\Autodesk\Revit 2025`.
 5. Uruchom ponownie Revit 2025.
 
 Alternatywnie z PowerShell:

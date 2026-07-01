@@ -56,7 +56,12 @@ internal sealed class AssignPztPresetViewModel : INotifyPropertyChanged
 
     public string PresetDescription => SelectedPreset is null
         ? string.Empty
-        : $"Kategoria: {SelectedPreset.Category}, status: {SelectedPreset.Status}, wsp. bio: {SelectedPreset.BioFactor:0.##}, kondygnacje: {SelectedPreset.Floors:0.##}, wysokosc kond.: {SelectedPreset.StoreyHeight:0.##} m";
+        : $"Kategoria: {SelectedPreset.Category}, stan: {FormatState(SelectedPreset.Status)}";
+
+    private static string FormatState(string state)
+    {
+        return string.IsNullOrWhiteSpace(state) ? "-" : state;
+    }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {

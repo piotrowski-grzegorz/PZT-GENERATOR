@@ -267,7 +267,7 @@ public sealed class AreaBalanceViewModel
     {
         var builder = new StringBuilder();
 
-        builder.AppendLine("Kategoria;Status;Szt.;Powierzchnia [m2];Udzial dzialki [%];Informacje");
+        builder.AppendLine("Kategoria;Stan;Szt.;Powierzchnia [m2];Udzial dzialki [%];Informacje");
 
         foreach (AreaBalanceRow row in sourceRows)
         {

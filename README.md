@@ -1,15 +1,17 @@
 # PZT Generator
 
-Prototyp wtyczki do Autodesk Revit 2025.03 wspierajacej bilans PZT: granica dzialki, zabudowa, dojazdy, dojscia, parkingi, PBC oraz podstawowa walidacja MPZP.
+Prototyp wtyczki do pelnej wersji Autodesk Revit 2025.03 wspierajacej bilans PZT: granica dzialki, zabudowa, dojazdy, dojscia, parkingi, PBC oraz podstawowa walidacja MPZP.
 
-GT-02 jest prototypem funkcjonalnym, a GT-03 stabilizuje kod i dokumentacje dla wersji `0.2.0`. Wersja `0.2.1-mvp-test` jest przeznaczona do testow wewnetrznych. To nie jest jeszcze wersja produkcyjna ani komercyjny instalator.
+Uwaga: Revit LT nie obsluguje klasycznych dodatkow Revit API, wiec PZT Generator nie zadziala pod Revit LT.
+
+GT-02 jest prototypem funkcjonalnym, a GT-03 stabilizuje kod i dokumentacje dla wersji `0.2.0`. Wersja `0.2.2-mvp-test` jest przeznaczona do testow wewnetrznych. To nie jest jeszcze wersja produkcyjna ani komercyjny instalator.
 
 Instrukcja dla testerow: `TESTER_GUIDE.md`.
 
 Paczka instalacyjna dla testerow:
 
 ```text
-dist/PztGenerator-0.2.1-mvp-test-installer.zip
+dist/PztGenerator-0.2.2-mvp-test-installer.zip
 ```
 
 ## Aktualny ribbon
@@ -23,10 +25,12 @@ Zakladka `PZT`, panel `Bilans`:
 
 ## Zakres prototypu
 
-- Revit 2025 / .NET 8
+- pelny Revit 2025 / .NET 8
+- Revit LT: nieobslugiwany
 - odczyt natywnych `Areas` oraz `FilledRegion`
 - slownik stalych typow PZT zamiast dowolnego wpisywania kategorii
-- bilans powierzchni wedlug kategorii i statusu
+- bilans powierzchni wedlug kategorii i stanu
+- bilans rozdzielony wedlug kategorii i stanu, np. projektowana/istniejaca
 - powierzchnia dzialki z typu `Granica terenu / dzialki`
 - powierzchnia zabudowy i wskaznik zabudowy
 - powierzchnia biologicznie czynna i wskaznik PBC
@@ -37,6 +41,8 @@ Zakladka `PZT`, panel `Bilans`:
 - style wypelnien i obwiedni regionow `pztGen_*`
 - eksport raportu do CSV i DOCX
 - eksport listy warunkow MPZP do DOCX
+- zwarty format DOCX z tabelami do dalszego wykorzystania w opisie PAB/PT
+- uproszczona zakladka `Typy`: tylko typ, kategoria i stan
 
 ## Workflow testowy
 
@@ -96,11 +102,13 @@ Testy obejmuja:
 
 Najprostsza instalacja dla kolegi/testera:
 
-1. Przekaz paczke `dist/PztGenerator-0.2.1-mvp-test-installer.zip`.
+1. Przekaz paczke `dist/PztGenerator-0.2.2-mvp-test-installer.zip`.
 2. Tester rozpakowuje ZIP do dowolnego folderu.
 3. Tester klika `INSTALUJ_PZT_GENERATOR.bat`.
 4. Instalator pyta o sciezke folderu Revit 2025, np. `E:\Program Files\Autodesk\Revit 2025`.
 5. Po restarcie Revita powinna pojawic sie zakladka `PZT`.
+
+Nie wskazuj folderu Revit LT. Ta wersja Revita nie laduje dodatkow Revit API.
 
 Instalator kopiuje DLL do:
 

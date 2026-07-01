@@ -105,7 +105,7 @@
                               GridLinesVisibility="Horizontal">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Kategoria" Binding="{Binding Category}" Width="*" />
-                            <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="120" />
+                            <DataGridTextColumn Header="Stan" Binding="{Binding Status}" Width="120" />
                             <DataGridTextColumn Header="Szt." Binding="{Binding AreaCount}" Width="70" />
                             <DataGridTextColumn Header="Powierzchnia" Binding="{Binding AreaSquareMetersText}" Width="140" />
                             <DataGridTextColumn Header="Udzial dzialki" Binding="{Binding SiteShareText}" Width="120" />
@@ -228,7 +228,7 @@
                 <DockPanel Margin="0,10,0,0">
                     <StackPanel DockPanel.Dock="Top" Margin="0,0,0,10">
                         <TextBlock Text="Ustawienia typow PZT" FontSize="15" FontWeight="SemiBold" />
-                        <TextBlock Text="Nazwa, kategoria i status sa stale. Edytuj tylko parametry obliczeniowe, zaznacz obszary w Revit i zastosuj wybrany typ."
+                        <TextBlock Text="Nazwa, kategoria i stan sa stale. Parametry obliczeniowe typow zostana doprecyzowane w kolejnym kroku."
                                    Margin="0,4,0,0"
                                    Foreground="#555555"
                                    TextWrapping="Wrap" />
@@ -256,11 +256,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Typ" Binding="{Binding Name}" IsReadOnly="True" Width="190" />
                             <DataGridTextColumn Header="Kategoria" Binding="{Binding Category}" IsReadOnly="True" Width="150" />
-                            <DataGridTextColumn Header="Status" Binding="{Binding Status}" IsReadOnly="True" Width="120" />
-                            <DataGridTextColumn Header="Kond." Binding="{Binding Floors, UpdateSourceTrigger=PropertyChanged}" Width="72" />
-                            <DataGridTextColumn Header="Wys. kond. [m]" Binding="{Binding StoreyHeight, UpdateSourceTrigger=PropertyChanged}" Width="105" />
-                            <DataGridTextColumn Header="Wsp. PBC" Binding="{Binding BioFactor, UpdateSourceTrigger=PropertyChanged}" Width="82" />
-                            <DataGridTextColumn Header="Uwagi / opis" Binding="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                            <DataGridTextColumn Header="Stan" Binding="{Binding Status}" IsReadOnly="True" Width="120" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </DockPanel>
@@ -300,7 +296,7 @@
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Typ" Binding="{Binding Name}" Width="190" />
                             <DataGridTextColumn Header="Kategoria" Binding="{Binding Category}" Width="140" />
-                            <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="110" />
+                            <DataGridTextColumn Header="Stan" Binding="{Binding Status}" Width="110" />
                             <DataGridTextColumn Header="Styl obwiedni" Binding="{Binding LineStyleName}" Width="145" />
                             <DataGridTextColumn Header="Typ linii" Binding="{Binding LinePatternText}" Width="90" />
                             <DataGridTemplateColumn Header="Kolor linii" Width="78">

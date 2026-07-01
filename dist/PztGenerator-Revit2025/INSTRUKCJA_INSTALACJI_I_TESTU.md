@@ -1,8 +1,10 @@
 # PZT Generator MVP - instrukcja instalacji i testu
 
-Wersja: `0.2.1-mvp-test`
+Wersja: `0.2.2-mvp-test`
 
-To jest prototyp testowy dla Autodesk Revit 2025 / 2025.03. Nie jest to jeszcze wersja produkcyjna.
+To jest prototyp testowy dla pelnej wersji Autodesk Revit 2025 / 2025.03. Nie jest to jeszcze wersja produkcyjna.
+
+Uwaga: Revit LT nie obsluguje klasycznych dodatkow Revit API, wiec PZT Generator nie zadziala pod Revit LT.
 
 ## 1. Co jest w paczce
 
@@ -22,8 +24,9 @@ To jest prototyp testowy dla Autodesk Revit 2025 / 2025.03. Nie jest to jeszcze 
    Przyklady:
    - `C:\Program Files\Autodesk\Revit 2025`
    - `E:\Program Files\Autodesk\Revit 2025`
-5. Po komunikacie o udanej instalacji uruchom Revit 2025.
-6. W Revicie powinna pojawic sie zakladka `PZT`.
+5. Nie wskazuj folderu Revit LT. Instalator przerwie instalacje dla Revit LT.
+6. Po komunikacie o udanej instalacji uruchom Revit 2025.
+7. W Revicie powinna pojawic sie zakladka `PZT`.
 
 Instalator kopiuje wtyczke do:
 
@@ -61,7 +64,7 @@ oraz tworzy manifest Revita:
     - max. intensywnosc: `1.0`
 11. Kliknij `PZT > Bilans obszarow`.
 12. W zakladce `Bilans` sprawdz powierzchnie i wskazniki.
-13. W zakladce `MPZP` sprawdz warunki oraz status `spelniony` / `niespelniony`.
+13. W zakladce `MPZP` sprawdz warunki oraz wynik `spelniony` / `niespelniony`.
 14. Kliknij `Eksport DOCX`, aby zapisac caly bilans.
 15. W zakladce `MPZP` kliknij `Eksport MPZP DOCX`, aby zapisac tylko liste warunkow.
 16. W zakladce `Grafika` kliknij `Zastosuj style do regionow`, jezeli chcesz odswiezyc kolory, wypelnienia i obwiednie.

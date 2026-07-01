@@ -12,28 +12,27 @@ public static class PztDocxExporter
     {
         var body = new StringBuilder();
 
-        body.Append(Paragraph("Bilans obszarow PZT", bold: true, size: 32));
-        body.Append(Paragraph($"{DateTime.Now:yyyy-MM-dd HH:mm}"));
-        body.Append(Paragraph(buildText));
-        body.Append(Paragraph("MVP / prototyp testowy - raport sluzy do sprawdzenia workflow i logiki bilansu."));
+        body.Append(Paragraph("Bilans terenu PZT", ParagraphKind.Title));
+        body.Append(Paragraph($"Data opracowania: {DateTime.Now:yyyy-MM-dd}", ParagraphKind.Meta));
+        body.Append(Paragraph("Zestawienie testowe wygenerowane z modelu Revit.", ParagraphKind.Meta));
 
-        body.Append(Paragraph("Wskazniki", bold: true, size: 24));
+        body.Append(Paragraph("Podstawowe wskazniki", ParagraphKind.Heading));
         body.Append(Table(
-            new[] { "Wskaznik", "Wartosc" },
+            new[] { "Lp.", "Wskaznik", "Wartosc" },
             new[]
             {
-                new[] { "Powierzchnia dzialki", SquareMeters(report.SiteAreaSquareMeters) },
-                new[] { "Powierzchnia zabudowy", $"{SquareMeters(report.BuildingFootprintSquareMeters)} ({Percent(report.BuildingCoveragePercent)} pow. dzialki)" },
-                new[] { "Powierzchnia utwardzona", SquareMeters(report.HardenedAreaSquareMeters) },
-                new[] { "Powierzchnia biologicznie czynna", $"{SquareMeters(report.BioAreaSquareMeters)} ({Percent(report.BioPercent)} pow. dzialki)" },
-                new[] { "Powierzchnia calkowita", SquareMeters(report.GrossFloorAreaSquareMeters) },
-                new[] { "Intensywnosc zabudowy", Number(report.Intensity) },
-                new[] { "Miejsca parkingowe", $"Razem: {report.ParkingSpaceCount:N0}, zwykle: {report.RegularParkingSpaceCount:N0}, N: {report.AccessibleParkingSpaceCount:N0}" }
+                new[] { "1", "Powierzchnia dzialki", SquareMeters(report.SiteAreaSquareMeters) },
+                new[] { "2", "Powierzchnia zabudowy", $"{SquareMeters(report.BuildingFootprintSquareMeters)} ({Percent(report.BuildingCoveragePercent)} pow. dzialki)" },
+                new[] { "3", "Powierzchnia utwardzona", SquareMeters(report.HardenedAreaSquareMeters) },
+                new[] { "4", "Powierzchnia biologicznie czynna", $"{SquareMeters(report.BioAreaSquareMeters)} ({Percent(report.BioPercent)} pow. dzialki)" },
+                new[] { "5", "Powierzchnia calkowita", SquareMeters(report.GrossFloorAreaSquareMeters) },
+                new[] { "6", "Intensywnosc zabudowy", Number(report.Intensity) },
+                new[] { "7", "Miejsca parkingowe", $"Razem: {report.ParkingSpaceCount:N0}, zwykle: {report.RegularParkingSpaceCount:N0}, N: {report.AccessibleParkingSpaceCount:N0}" }
             }));
 
-        body.Append(Paragraph("Bilans typow PZT", bold: true, size: 24));
+        body.Append(Paragraph("Bilans powierzchni wedlug typu i stanu", ParagraphKind.Heading));
         body.Append(Table(
-            new[] { "Kategoria", "Status", "Szt.", "Powierzchnia", "Udzial dzialki", "Informacje" },
+            new[] { "Kategoria", "Stan", "Szt.", "Powierzchnia", "Udzial dzialki", "Informacje" },
             report.Rows.Select(row =>
             {
                 var share = report.SiteAreaSquareMeters > 0
@@ -43,7 +42,7 @@ public static class PztDocxExporter
                 return new[]
                 {
                     row.Category,
-                    string.IsNullOrWhiteSpace(row.Status) ? "-" : row.Status,
+                    FormatState(row.Status),
                     row.AreaCount.ToString(CultureInfo.CurrentCulture),
                     SquareMeters(row.AreaSquareMeters),
                     share,
@@ -51,14 +50,16 @@ public static class PztDocxExporter
                 };
             })));
 
-        body.Append(Paragraph("Walidacja MPZP", bold: true, size: 24));
+        body.Append(Paragraph("Walidacja MPZP", ParagraphKind.Heading));
         body.Append(Table(
-            new[] { "Warunek", "Status" },
+            new[] { "Warunek / rachunek", "Wynik" },
             report.ValidationMessages.Select(message => new[]
             {
                 message.Text,
-                FormatStatus(message.Severity)
+                FormatValidationResult(message.Severity)
             })));
+
+        body.Append(Paragraph(buildText, ParagraphKind.Footer));
 
         Save(filePath, body.ToString());
     }
@@ -67,18 +68,20 @@ public static class PztDocxExporter
     {
         var body = new StringBuilder();
 
-        body.Append(Paragraph("Walidacja MPZP", bold: true, size: 32));
-        body.Append(Paragraph($"{DateTime.Now:yyyy-MM-dd HH:mm}"));
-        body.Append(Paragraph(buildText));
-        body.Append(Paragraph($"Powierzchnia dzialki: {SquareMeters(report.SiteAreaSquareMeters)}"));
+        body.Append(Paragraph("Walidacja warunkow MPZP", ParagraphKind.Title));
+        body.Append(Paragraph($"Data opracowania: {DateTime.Now:yyyy-MM-dd}", ParagraphKind.Meta));
+        body.Append(Paragraph($"Powierzchnia dzialki: {SquareMeters(report.SiteAreaSquareMeters)}", ParagraphKind.Meta));
 
         body.Append(Table(
-            new[] { "Warunek", "Status" },
-            report.ValidationMessages.Select(message => new[]
+            new[] { "Lp.", "Warunek / rachunek", "Wynik" },
+            report.ValidationMessages.Select((message, index) => new[]
             {
+                (index + 1).ToString(CultureInfo.CurrentCulture),
                 message.Text,
-                FormatStatus(message.Severity)
+                FormatValidationResult(message.Severity)
             })));
+
+        body.Append(Paragraph(buildText, ParagraphKind.Footer));
 
         Save(filePath, body.ToString());
     }
@@ -94,36 +97,30 @@ public static class PztDocxExporter
         using var archive = new ZipArchive(stream, ZipArchiveMode.Create);
 
         WriteEntry(archive, "[Content_Types].xml",
-            """
-            <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-            <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
-              <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
-              <Default Extension="xml" ContentType="application/xml"/>
-              <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
-            </Types>
-            """);
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+            "<Types xmlns=\"http://schemas.openxmlformats.org/package/2006/content-types\">" +
+            "<Default Extension=\"rels\" ContentType=\"application/vnd.openxmlformats-package.relationships+xml\"/>" +
+            "<Default Extension=\"xml\" ContentType=\"application/xml\"/>" +
+            "<Override PartName=\"/word/document.xml\" ContentType=\"application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml\"/>" +
+            "</Types>");
 
         WriteEntry(archive, "_rels/.rels",
-            """
-            <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-            <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-              <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
-            </Relationships>
-            """);
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+            "<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\">" +
+            "<Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument\" Target=\"word/document.xml\"/>" +
+            "</Relationships>");
 
         WriteEntry(archive, "word/document.xml",
-            $$"""
-            <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-            <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-              <w:body>
-                {{bodyXml}}
-                <w:sectPr>
-                  <w:pgSz w:w="11906" w:h="16838"/>
-                  <w:pgMar w:top="1134" w:right="850" w:bottom="1134" w:left="850" w:header="708" w:footer="708" w:gutter="0"/>
-                </w:sectPr>
-              </w:body>
-            </w:document>
-            """);
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+            "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\">" +
+            "<w:body>" +
+            bodyXml +
+            "<w:sectPr>" +
+            "<w:pgSz w:w=\"11906\" w:h=\"16838\"/>" +
+            "<w:pgMar w:top=\"850\" w:right=\"850\" w:bottom=\"850\" w:left=\"850\" w:header=\"708\" w:footer=\"708\" w:gutter=\"0\"/>" +
+            "</w:sectPr>" +
+            "</w:body>" +
+            "</w:document>");
     }
 
     private static void WriteEntry(ZipArchive archive, string name, string content)
@@ -133,41 +130,57 @@ public static class PztDocxExporter
         writer.Write(content);
     }
 
-    private static string Paragraph(string text, bool bold = false, int size = 22)
+    private static string Paragraph(string text, ParagraphKind kind)
     {
-        var boldXml = bold ? "<w:b/>" : string.Empty;
+        var size = kind switch
+        {
+            ParagraphKind.Title => 24,
+            ParagraphKind.Heading => 20,
+            ParagraphKind.Footer => 14,
+            _ => 18
+        };
 
-        return $$"""
-        <w:p>
-          <w:r>
-            <w:rPr>{{boldXml}}<w:sz w:val="{{size}}"/></w:rPr>
-            <w:t>{{Escape(text)}}</w:t>
-          </w:r>
-        </w:p>
-        """;
+        var after = kind switch
+        {
+            ParagraphKind.Title => 120,
+            ParagraphKind.Heading => 80,
+            ParagraphKind.Footer => 0,
+            _ => 20
+        };
+
+        var before = kind == ParagraphKind.Heading ? 160 : 0;
+        var bold = kind is ParagraphKind.Title or ParagraphKind.Heading ? "<w:b/>" : string.Empty;
+        var color = kind == ParagraphKind.Footer ? "<w:color w:val=\"777777\"/>" : string.Empty;
+
+        return
+            "<w:p>" +
+            "<w:pPr><w:spacing w:before=\"" + before + "\" w:after=\"" + after + "\" w:line=\"240\" w:lineRule=\"auto\"/></w:pPr>" +
+            "<w:r><w:rPr>" + bold + color + "<w:sz w:val=\"" + size + "\"/></w:rPr><w:t>" + Escape(text) + "</w:t></w:r>" +
+            "</w:p>";
     }
 
     private static string Table(string[] headers, IEnumerable<string[]> rows)
     {
         var builder = new StringBuilder();
 
-        builder.Append("""
-        <w:tbl>
-          <w:tblPr>
-            <w:tblBorders>
-              <w:top w:val="single" w:sz="4" w:space="0" w:color="B7B7B7"/>
-              <w:left w:val="single" w:sz="4" w:space="0" w:color="B7B7B7"/>
-              <w:bottom w:val="single" w:sz="4" w:space="0" w:color="B7B7B7"/>
-              <w:right w:val="single" w:sz="4" w:space="0" w:color="B7B7B7"/>
-              <w:insideH w:val="single" w:sz="4" w:space="0" w:color="D9D9D9"/>
-              <w:insideV w:val="single" w:sz="4" w:space="0" w:color="D9D9D9"/>
-            </w:tblBorders>
-            <w:tblCellMar>
-              <w:top w:w="80" w:type="dxa"/><w:left w:w="80" w:type="dxa"/>
-              <w:bottom w:w="80" w:type="dxa"/><w:right w:w="80" w:type="dxa"/>
-            </w:tblCellMar>
-          </w:tblPr>
-        """);
+        builder.Append(
+            "<w:tbl>" +
+            "<w:tblPr>" +
+            "<w:tblW w:w=\"5000\" w:type=\"pct\"/>" +
+            "<w:tblLayout w:type=\"autofit\"/>" +
+            "<w:tblBorders>" +
+            "<w:top w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"8A8A8A\"/>" +
+            "<w:left w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"8A8A8A\"/>" +
+            "<w:bottom w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"8A8A8A\"/>" +
+            "<w:right w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"8A8A8A\"/>" +
+            "<w:insideH w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"D0D0D0\"/>" +
+            "<w:insideV w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"D0D0D0\"/>" +
+            "</w:tblBorders>" +
+            "<w:tblCellMar>" +
+            "<w:top w:w=\"70\" w:type=\"dxa\"/><w:left w:w=\"70\" w:type=\"dxa\"/>" +
+            "<w:bottom w:w=\"70\" w:type=\"dxa\"/><w:right w:w=\"70\" w:type=\"dxa\"/>" +
+            "</w:tblCellMar>" +
+            "</w:tblPr>");
 
         builder.Append(Row(headers, header: true));
 
@@ -188,20 +201,16 @@ public static class PztDocxExporter
 
         foreach (string cell in cells)
         {
-            var shading = header ? """<w:shd w:fill="EDEDED"/>""" : string.Empty;
+            var shading = header ? "<w:shd w:fill=\"EDEDED\"/>" : string.Empty;
             var bold = header ? "<w:b/>" : string.Empty;
 
-            builder.Append($$"""
-            <w:tc>
-              <w:tcPr>{{shading}}</w:tcPr>
-              <w:p>
-                <w:r>
-                  <w:rPr>{{bold}}<w:sz w:val="20"/></w:rPr>
-                  <w:t>{{Escape(cell)}}</w:t>
-                </w:r>
-              </w:p>
-            </w:tc>
-            """);
+            builder.Append(
+                "<w:tc>" +
+                "<w:tcPr>" + shading + "<w:vAlign w:val=\"center\"/></w:tcPr>" +
+                "<w:p><w:pPr><w:spacing w:before=\"0\" w:after=\"0\" w:line=\"220\" w:lineRule=\"auto\"/></w:pPr>" +
+                "<w:r><w:rPr>" + bold + "<w:sz w:val=\"18\"/></w:rPr><w:t>" + Escape(cell) + "</w:t></w:r>" +
+                "</w:p>" +
+                "</w:tc>");
         }
 
         builder.Append("</w:tr>");
@@ -219,7 +228,7 @@ public static class PztDocxExporter
 
         if (!string.IsNullOrWhiteSpace(row.BioFactorLabel))
         {
-            parts.Add($"wsp. bio: {row.BioFactorLabel}");
+            parts.Add($"wsp. PBC: {row.BioFactorLabel}");
         }
 
         if (row.BioAreaSquareMeters > 0)
@@ -230,7 +239,12 @@ public static class PztDocxExporter
         return parts.Count == 0 ? "-" : string.Join(", ", parts);
     }
 
-    private static string FormatStatus(ValidationSeverity severity)
+    private static string FormatState(string state)
+    {
+        return string.IsNullOrWhiteSpace(state) ? "-" : state;
+    }
+
+    private static string FormatValidationResult(ValidationSeverity severity)
     {
         return severity switch
         {
@@ -259,5 +273,13 @@ public static class PztDocxExporter
     private static string Escape(string value)
     {
         return SecurityElement.Escape(value) ?? string.Empty;
+    }
+
+    private enum ParagraphKind
+    {
+        Title,
+        Heading,
+        Meta,
+        Footer
     }
 }

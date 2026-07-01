@@ -2,12 +2,13 @@
 
 ## Cel testu
 
-Sprawdzamy workflow i logike bilansu PZT w prototypie `0.2.1-mvp-test` dla Revit 2025.03. To nie jest narzedzie do finalnej dokumentacji ani rozliczen formalnych.
+Sprawdzamy workflow i logike bilansu PZT w prototypie `0.2.2-mvp-test` dla Revit 2025.03. To nie jest narzedzie do finalnej dokumentacji ani rozliczen formalnych.
 
 ## Przed testem
 
-- Zainstaluj wtyczke z paczki `PztGenerator-0.2.1-mvp-test-installer.zip`.
+- Zainstaluj wtyczke z paczki `PztGenerator-0.2.2-mvp-test-installer.zip`.
 - Po rozpakowaniu kliknij `INSTALUJ_PZT_GENERATOR.bat` i podaj sciezke folderu Revit 2025.
+- Test wymaga pelnej wersji Autodesk Revit 2025. Revit LT nie obsluguje tej wtyczki.
 - Uruchom Revit ponownie po instalacji wtyczki.
 - Sprawdz, czy widoczna jest zakladka `PZT`.
 - Testuj na kopii modelu albo na prostym pliku testowym.
@@ -37,8 +38,9 @@ Sprawdzamy workflow i logike bilansu PZT w prototypie `0.2.1-mvp-test` dla Revit
 - Czy workflow przypisywania typow jest zrozumialy.
 - Czy nazwy kategorii PZT sa jasne.
 - Czy bilans pokazuje oczekiwane wartosci.
+- Czy rozdzielenie na `Stan` projektowany/istniejacy jest czytelne.
 - Czy walidacja MPZP czytelnie tlumaczy rachunek.
-- Czy eksport DOCX bilansu i MPZP jest czytelny dla testowego raportu.
+- Czy eksport DOCX bilansu i MPZP nadaje sie jako tabela do opisu PAB/PT.
 - Czy grafika regionow pomaga w pracy na rysunku.
 - Czy komunikaty bledow wystarczaja, gdy brakuje granicy dzialki albo typu PZT.
 

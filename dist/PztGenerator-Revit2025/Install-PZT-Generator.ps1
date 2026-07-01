@@ -16,6 +16,10 @@ function Read-RequiredPath($promptText) {
     }
 }
 
+function Test-IsRevitLtPath($path) {
+    return $path -match "Revit[\s-]*LT" -or (Test-Path (Join-Path $path "RevitLT.exe"))
+}
+
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 if ([string]::IsNullOrWhiteSpace($SourceDll)) {
@@ -42,12 +46,16 @@ if ([string]::IsNullOrWhiteSpace($RevitPath)) {
 }
 
 $revitPathResolved = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($RevitPath)
+if (Test-IsRevitLtPath $revitPathResolved) {
+    throw "Revit LT nie obsluguje dodatkow Revit API. PZT Generator wymaga pelnej wersji Autodesk Revit 2025."
+}
+
 $revitExe = Join-Path $revitPathResolved "Revit.exe"
 if (-not (Test-Path $revitExe)) {
     Write-Host "Uwaga: w podanej sciezce nie znaleziono Revit.exe." -ForegroundColor Yellow
     Write-Host "Sciezka: $revitPathResolved"
     $continue = Read-Host "Kontynuowac instalacje dodatku mimo tego? [t/N]"
-    if ($continue.Trim().ToLowerInvariant() -notin @("t", "tak", "y", "yes")) {
+    if ([string]::IsNullOrWhiteSpace($continue) -or $continue.Trim().ToLowerInvariant() -notin @("t", "tak", "y", "yes")) {
         throw "Przerwano instalacje."
     }
 }
