@@ -12,21 +12,6 @@ public static class PztBalanceService
         List<PztAreaItem> areaItems = allAreaItems
             .Where(item => !item.IsUnassigned && !item.HasInvalidCategory)
             .ToList();
-
-        List<AreaBalanceRow> rows = areaItems
-            .GroupBy(item => new { item.Category, item.Status })
-            .Select(group => new AreaBalanceRow(
-                group.Key.Category,
-                group.Key.Status,
-                group.Count(),
-                group.Sum(item => item.AreaSquareMeters),
-                group.Sum(item => item.GrossFloorAreaSquareMeters),
-                group.Sum(item => item.BioAreaSquareMeters),
-                GetFactorLabel(group)))
-            .OrderBy(row => row.Category)
-            .ThenBy(row => row.Status)
-            .ToList();
-
         double siteArea = Math.Max(0, areaItems.Where(item => item.IsSiteBoundary).Sum(item => item.AreaSquareMeters));
         double buildingFootprint = areaItems.Where(item => item.IsBuilding).Sum(item => item.AreaSquareMeters);
         double hardenedArea = areaItems.Where(item => item.IsHardened).Sum(item => item.AreaSquareMeters);
@@ -42,6 +27,7 @@ public static class PztBalanceService
             : explicitBioArea;
         double buildingCoveragePercent = siteArea > 0 ? buildingFootprint / siteArea * 100 : 0;
         double bioPercent = siteArea > 0 ? bioArea / siteArea * 100 : 0;
+        List<AreaBalanceRow> rows = BuildRows(areaItems, siteArea, bioArea);
         double intensity = siteArea > 0 ? grossFloorArea / siteArea : 0;
         double parkingArea = areaItems
             .Where(item => string.Equals(item.Category, PztCategories.Parking, StringComparison.OrdinalIgnoreCase))
@@ -85,6 +71,54 @@ public static class PztBalanceService
             parkingSettings.AccessibleSpaceCount,
             parkingSettings,
             messages);
+    }
+
+    private static List<AreaBalanceRow> BuildRows(IReadOnlyCollection<PztAreaItem> areaItems, double siteArea, double bioArea)
+    {
+        List<AreaBalanceRow> rows = areaItems
+            .Where(item => siteArea <= 0 || !string.Equals(item.Category, PztCategories.BioActive, StringComparison.OrdinalIgnoreCase))
+            .GroupBy(item => new { item.Category, item.Status })
+            .Select(group => new AreaBalanceRow(
+                group.Key.Category,
+                group.Key.Status,
+                group.Count(),
+                group.Sum(item => item.AreaSquareMeters),
+                group.Sum(item => item.GrossFloorAreaSquareMeters),
+                group.Sum(item => item.BioAreaSquareMeters),
+                GetFactorLabel(group)))
+            .ToList();
+
+        if (siteArea > 0)
+        {
+            rows.Add(new AreaBalanceRow(
+                PztCategories.BioActive,
+                "Automatyczna z granicy dzialki",
+                1,
+                bioArea,
+                0,
+                bioArea,
+                "1,00"));
+        }
+
+        return rows
+            .OrderBy(row => GetRowSortKey(row.Category))
+            .ThenBy(row => row.Status)
+            .ToList();
+    }
+
+    private static int GetRowSortKey(string category)
+    {
+        return category switch
+        {
+            PztCategories.SiteBoundary => 0,
+            PztCategories.Building => 1,
+            PztCategories.AccessRoad => 2,
+            PztCategories.Walkway => 3,
+            PztCategories.Parking => 4,
+            PztCategories.SemiPermeable => 5,
+            PztCategories.BioActive => 6,
+            _ => 99
+        };
     }
 
     private static string GetFactorLabel(IEnumerable<PztAreaItem> areas)

@@ -4,14 +4,14 @@ Prototyp wtyczki do pelnej wersji Autodesk Revit 2025.03 wspierajacej bilans PZT
 
 Uwaga: Revit LT nie obsluguje klasycznych dodatkow Revit API, wiec PZT Generator nie zadziala pod Revit LT.
 
-GT-02 jest prototypem funkcjonalnym, a GT-03 stabilizuje kod i dokumentacje dla wersji `0.2.0`. Wersja `0.2.2-mvp-test` jest przeznaczona do testow wewnetrznych. To nie jest jeszcze wersja produkcyjna ani komercyjny instalator.
+GT-02 jest prototypem funkcjonalnym, a GT-03 stabilizuje kod i dokumentacje dla wersji `0.2.0`. Wersja `0.2.3-mvp-test` jest przeznaczona do testow wewnetrznych. To nie jest jeszcze wersja produkcyjna ani komercyjny instalator.
 
 Instrukcja dla testerow: `TESTER_GUIDE.md`.
 
 Paczka instalacyjna dla testerow:
 
 ```text
-dist/PztGenerator-0.2.2-mvp-test-installer.zip
+dist/PztGenerator-0.2.3-mvp-test-installer.zip
 ```
 
 ## Aktualny ribbon
@@ -33,7 +33,7 @@ Zakladka `PZT`, panel `Bilans`:
 - bilans rozdzielony wedlug kategorii i stanu, np. projektowana/istniejaca
 - powierzchnia dzialki z typu `Granica terenu / dzialki`
 - powierzchnia zabudowy i wskaznik zabudowy
-- powierzchnia biologicznie czynna i wskaznik PBC
+- powierzchnia biologicznie czynna liczona automatycznie z granicy dzialki: dzialka minus zabudowa i utwardzenia plus biologiczna czesc nawierzchni przepuszczalnych
 - powierzchnia calkowita i intensywnosc zabudowy
 - miejsca parkingowe liczone z powierzchni parkingu i ustawien miejsc
 - walidacja min/max MPZP z opisem rachunku
@@ -53,17 +53,18 @@ Zakladka `PZT`, panel `Bilans`:
    - zabudowy,
    - dojazdow/dojsc,
    - parkingu,
-   - obszarow PBC lub czesciowo biologicznie czynnych.
+   - ewentualnie czesciowo biologicznie czynnych nawierzchni przepuszczalnych.
 4. Kliknij `PZT > Przygotuj PZT`.
 5. Zaznacz region i kliknij `PZT > Przypisz typ`.
 6. Dla granicy wybierz `Granica terenu / dzialki`.
 7. Dla budynkow wybierz `Zabudowa projektowana` albo `Zabudowa istniejaca`.
 8. Kliknij `PZT > MPZP` i wpisz wymagania planu.
 9. Kliknij `PZT > Bilans obszarow`.
-10. W zakladce `Typy` mozesz zmienic kondygnacje, wysokosc kondygnacji i wspolczynnik PBC dla zaznaczonych regionow.
-11. W zakladce `MPZP` sprawdz liste warunkow i uzyj `Eksport MPZP DOCX`, jezeli chcesz zapisac sama walidacje.
-12. Uzyj `Eksport DOCX`, jezeli chcesz zapisac caly bilans jako raport tabelaryczny.
-13. W zakladce `Grafika` uzyj `Zastosuj style do regionow`, jezeli trzeba odswiezyc wypelnienia i obwiednie.
+10. PBC nie wymaga osobnego rysowania: po przypisaniu granicy dzialki bilans liczy ja automatycznie i odejmuje zabudowe, dojazdy, dojscia oraz parkingi.
+11. W zakladce `Typy` mozesz zmienic kondygnacje i wysokosc kondygnacji dla zabudowy albo wspolczynnik PBC dla nawierzchni czesciowo biologicznie czynnych.
+12. W zakladce `MPZP` sprawdz liste warunkow i uzyj `Eksport MPZP DOCX`, jezeli chcesz zapisac sama walidacje.
+13. Uzyj `Eksport DOCX`, jezeli chcesz zapisac caly bilans jako raport tabelaryczny.
+14. W zakladce `Grafika` uzyj `Zastosuj style do regionow`, jezeli trzeba odswiezyc wypelnienia i obwiednie.
 
 Nie wpisuj recznie dowolnych wartosci w `PZT_Kategoria`. Raport rozpoznaje tylko stale typy PZT nadawane przez wtyczke.
 
@@ -102,7 +103,7 @@ Testy obejmuja:
 
 Najprostsza instalacja dla kolegi/testera:
 
-1. Przekaz paczke `dist/PztGenerator-0.2.2-mvp-test-installer.zip`.
+1. Przekaz paczke `dist/PztGenerator-0.2.3-mvp-test-installer.zip`.
 2. Tester rozpakowuje ZIP do dowolnego folderu.
 3. Tester klika `INSTALUJ_PZT_GENERATOR.bat`.
 4. Instalator pyta o sciezke folderu Revit 2025, np. `E:\Program Files\Autodesk\Revit 2025`.
@@ -149,3 +150,9 @@ Po restarcie Revita powinna pojawic sie zakladka `PZT`.
 - licencjonowanie,
 - komercyjny instalator,
 - automatyczne odswiezanie realtime.
+
+## Prototyp standalone
+
+W katalogu `standalone` jest osobny prototyp aplikacji Windows dla workflow bez dodatku Revit API, np. Revit LT, Archicad albo AutoCAD. Standalone wspoldzieli logike bilansu z pluginem, obsluguje reczne wiersze, CSV oraz import konturow z DXF po warstwach ISO 13567. Po imporcie pliku DXF mozna zapisac go ponownie w programie CAD i kliknac `Aktualizuj`, zeby przeliczyc bilans.
+
+Instrukcja testu: `standalone/STANDALONE_TEST_GUIDE.md`.

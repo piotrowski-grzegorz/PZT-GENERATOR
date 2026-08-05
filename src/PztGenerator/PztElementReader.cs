@@ -50,6 +50,8 @@ internal static class PztElementReader
         string category = ReadString(element, PztParameterNames.Category);
         string status = ReadString(element, PztParameterNames.Status);
 
+        NormalizeLegacyTypeValues(ref category, ref status);
+
         return new PztAreaItem(
             NormalizeCategory(category),
             status,
@@ -83,6 +85,25 @@ internal static class PztElementReader
         }
 
         return PztCategories.IsKnown(category) ? category.Trim() : PztCategories.Invalid;
+    }
+
+    private static void NormalizeLegacyTypeValues(ref string category, ref string status)
+    {
+        string trimmedCategory = category.Trim();
+
+        if (string.Equals(trimmedCategory, "Zabudowa istniejaca", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(trimmedCategory, "Zabudowa istniejÄ…ca", StringComparison.OrdinalIgnoreCase))
+        {
+            category = PztCategories.Building;
+            status = "Istniejaca";
+            return;
+        }
+
+        if (string.Equals(trimmedCategory, "Zabudowa projektowana", StringComparison.OrdinalIgnoreCase))
+        {
+            category = PztCategories.Building;
+            status = "Projektowana";
+        }
     }
 
     private static double GetFilledRegionAreaSquareMeters(FilledRegion region)

@@ -21,6 +21,7 @@ Uwaga: paczka wymaga pelnej wersji Autodesk Revit 2025. Revit LT nie obsluguje k
 - bilans liczy tez regiony wypelnienia, ktore moga nachodzic na siebie bez pomniejszania dzialki
 - `Przypisz typ` dziala na powierzchniach i regionach wypelnienia
 - regiony wypelnienia dostaja automatyczny typ graficzny PZT z kolorem i gruboscia linii
+- automatyczna PBC liczona z granicy dzialki: dzialka minus zabudowa i utwardzenia plus biologiczna czesc nawierzchni przepuszczalnych
 - wskazniki urbanistyczne i walidacja MPZP
 - MPZP pokazuje przeliczenie procentow na m2 na podstawie obszaru `Granica terenu / dzialki`
 - raport pokazuje powierzchnie utwardzona z dojazdow, dojsc i parkingow

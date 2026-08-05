@@ -14,50 +14,25 @@ public static class PztDocxExporter
 
         body.Append(Paragraph("Bilans terenu PZT", ParagraphKind.Title));
         body.Append(Paragraph($"Data opracowania: {DateTime.Now:yyyy-MM-dd}", ParagraphKind.Meta));
-        body.Append(Paragraph("Zestawienie testowe wygenerowane z modelu Revit.", ParagraphKind.Meta));
+        body.Append(Paragraph("Zestawienie powierzchni do wykorzystania w czesci opisowej projektu architektoniczno-budowlanego.", ParagraphKind.Meta));
 
-        body.Append(Paragraph("Podstawowe wskazniki", ParagraphKind.Heading));
+        body.Append(Paragraph("1. Podstawowe wskazniki zagospodarowania terenu", ParagraphKind.Heading));
         body.Append(Table(
             new[] { "Lp.", "Wskaznik", "Wartosc" },
-            new[]
-            {
-                new[] { "1", "Powierzchnia dzialki", SquareMeters(report.SiteAreaSquareMeters) },
-                new[] { "2", "Powierzchnia zabudowy", $"{SquareMeters(report.BuildingFootprintSquareMeters)} ({Percent(report.BuildingCoveragePercent)} pow. dzialki)" },
-                new[] { "3", "Powierzchnia utwardzona", SquareMeters(report.HardenedAreaSquareMeters) },
-                new[] { "4", "Powierzchnia biologicznie czynna", $"{SquareMeters(report.BioAreaSquareMeters)} ({Percent(report.BioPercent)} pow. dzialki)" },
-                new[] { "5", "Powierzchnia calkowita", SquareMeters(report.GrossFloorAreaSquareMeters) },
-                new[] { "6", "Intensywnosc zabudowy", Number(report.Intensity) },
-                new[] { "7", "Miejsca parkingowe", $"Razem: {report.ParkingSpaceCount:N0}, zwykle: {report.RegularParkingSpaceCount:N0}, N: {report.AccessibleParkingSpaceCount:N0}" }
-            }));
+            new[] { 650, 4700, 3600 },
+            BuildIndicatorRows(report)));
 
-        body.Append(Paragraph("Bilans powierzchni wedlug typu i stanu", ParagraphKind.Heading));
+        body.Append(Paragraph("2. Bilans powierzchni terenu", ParagraphKind.Heading));
         body.Append(Table(
-            new[] { "Kategoria", "Stan", "Szt.", "Powierzchnia", "Udzial dzialki", "Informacje" },
-            report.Rows.Select(row =>
-            {
-                var share = report.SiteAreaSquareMeters > 0
-                    ? Percent(row.AreaSquareMeters / report.SiteAreaSquareMeters * 100)
-                    : "-";
+            new[] { "Lp.", "Element bilansu", "Stan", "Liczba", "Powierzchnia [m2]", "Udzial w dzialce [%]", "Uwagi" },
+            new[] { 500, 2600, 1300, 850, 1500, 1400, 2300 },
+            BuildAreaRows(report)));
 
-                return new[]
-                {
-                    row.Category,
-                    FormatState(row.Status),
-                    row.AreaCount.ToString(CultureInfo.CurrentCulture),
-                    SquareMeters(row.AreaSquareMeters),
-                    share,
-                    BuildDetails(row)
-                };
-            })));
-
-        body.Append(Paragraph("Walidacja MPZP", ParagraphKind.Heading));
+        body.Append(Paragraph("3. Sprawdzenie wymagan MPZP", ParagraphKind.Heading));
         body.Append(Table(
-            new[] { "Warunek / rachunek", "Wynik" },
-            report.ValidationMessages.Select(message => new[]
-            {
-                message.Text,
-                FormatValidationResult(message.Severity)
-            })));
+            new[] { "Lp.", "Warunek / rachunek", "Status" },
+            new[] { 500, 7000, 1800 },
+            BuildValidationRows(report)));
 
         body.Append(Paragraph(buildText, ParagraphKind.Footer));
 
@@ -73,17 +48,117 @@ public static class PztDocxExporter
         body.Append(Paragraph($"Powierzchnia dzialki: {SquareMeters(report.SiteAreaSquareMeters)}", ParagraphKind.Meta));
 
         body.Append(Table(
-            new[] { "Lp.", "Warunek / rachunek", "Wynik" },
-            report.ValidationMessages.Select((message, index) => new[]
-            {
-                (index + 1).ToString(CultureInfo.CurrentCulture),
-                message.Text,
-                FormatValidationResult(message.Severity)
-            })));
+            new[] { "Lp.", "Warunek / rachunek", "Status" },
+            new[] { 500, 7000, 1800 },
+            BuildValidationRows(report)));
 
         body.Append(Paragraph(buildText, ParagraphKind.Footer));
 
         Save(filePath, body.ToString());
+    }
+
+    private static IEnumerable<TableRow> BuildIndicatorRows(UrbanReport report)
+    {
+        return new[]
+        {
+            Row("1", "Powierzchnia terenu / dzialki", SquareMeters(report.SiteAreaSquareMeters)),
+            Row("2", "Powierzchnia zabudowy", $"{SquareMeters(report.BuildingFootprintSquareMeters)} ({Percent(report.BuildingCoveragePercent)} pow. dzialki)"),
+            Row("3", "Powierzchnia utwardzona", SquareMeters(report.HardenedAreaSquareMeters)),
+            Row("4", "Powierzchnia biologicznie czynna", $"{SquareMeters(report.BioAreaSquareMeters)} ({Percent(report.BioPercent)} pow. dzialki)"),
+            Row("5", "Powierzchnia calkowita budynkow", SquareMeters(report.GrossFloorAreaSquareMeters)),
+            Row("6", "Wskaznik intensywnosci zabudowy", Number(report.Intensity)),
+            Row("7", "Miejsca postojowe", $"Razem: {report.ParkingSpaceCount:N0}; standardowe: {report.RegularParkingSpaceCount:N0}; dla osob z niepelnosprawnosciami: {report.AccessibleParkingSpaceCount:N0}")
+        };
+    }
+
+    private static IEnumerable<TableRow> BuildAreaRows(UrbanReport report)
+    {
+        var rows = new List<TableRow>();
+        int index = 1;
+
+        foreach (IGrouping<string, AreaBalanceRow> statusGroup in report.Rows
+            .GroupBy(row => NormalizeStateGroup(row.Status))
+            .OrderBy(group => StateOrder(group.Key)))
+        {
+            string stateLabel = FormatStateGroup(statusGroup.Key);
+            rows.Add(new TableRow(
+                new[] { "", stateLabel, "", "", "", "", "" },
+                "EEF4F6",
+                true));
+
+            foreach (AreaBalanceRow row in statusGroup
+                .OrderBy(row => CategoryOrder(row.Category))
+                .ThenBy(row => row.Category))
+            {
+                rows.Add(Row(
+                    (index++).ToString(CultureInfo.CurrentCulture),
+                    FormatCategory(row.Category),
+                    FormatState(row.Status),
+                    row.AreaCount.ToString(CultureInfo.CurrentCulture),
+                    Number(row.AreaSquareMeters),
+                    ShareOfSite(row.AreaSquareMeters, report.SiteAreaSquareMeters),
+                    BuildDetails(row)));
+            }
+
+            rows.Add(new TableRow(
+                new[]
+                {
+                    "",
+                    $"Suma - {stateLabel.ToLowerInvariant()}",
+                    "",
+                    statusGroup.Sum(row => row.AreaCount).ToString(CultureInfo.CurrentCulture),
+                    Number(statusGroup.Sum(row => row.AreaSquareMeters)),
+                    ShareOfSite(statusGroup.Sum(row => row.AreaSquareMeters), report.SiteAreaSquareMeters),
+                    ""
+                },
+                "EAF3F2",
+                true));
+        }
+
+        rows.Add(new TableRow(
+            new[]
+            {
+                "",
+                "Razem projektowane i istniejace",
+                "",
+                report.Rows.Sum(row => row.AreaCount).ToString(CultureInfo.CurrentCulture),
+                Number(report.TotalAreaSquareMeters),
+                ShareOfSite(report.TotalAreaSquareMeters, report.SiteAreaSquareMeters),
+                ""
+            },
+            "D9E8E7",
+            true));
+
+        return rows;
+    }
+
+    private static IEnumerable<TableRow> BuildValidationRows(UrbanReport report)
+    {
+        return report.ValidationMessages.Select((message, index) =>
+        {
+            string fill = message.Severity switch
+            {
+                ValidationSeverity.Success => "DCEEDC",
+                ValidationSeverity.Error => "F4D6D2",
+                ValidationSeverity.Warning => "FFF1CC",
+                _ => "FFFFFF"
+            };
+
+            return new TableRow(
+                new[]
+                {
+                    (index + 1).ToString(CultureInfo.CurrentCulture),
+                    message.Text,
+                    FormatValidationResult(message.Severity)
+                },
+                fill,
+                message.Severity is ValidationSeverity.Success or ValidationSeverity.Error);
+        });
+    }
+
+    private static TableRow Row(params string[] cells)
+    {
+        return new TableRow(cells, null, false);
     }
 
     private static void Save(string filePath, string bodyXml)
@@ -117,7 +192,7 @@ public static class PztDocxExporter
             bodyXml +
             "<w:sectPr>" +
             "<w:pgSz w:w=\"11906\" w:h=\"16838\"/>" +
-            "<w:pgMar w:top=\"850\" w:right=\"850\" w:bottom=\"850\" w:left=\"850\" w:header=\"708\" w:footer=\"708\" w:gutter=\"0\"/>" +
+            "<w:pgMar w:top=\"850\" w:right=\"700\" w:bottom=\"850\" w:left=\"700\" w:header=\"708\" w:footer=\"708\" w:gutter=\"0\"/>" +
             "</w:sectPr>" +
             "</w:body>" +
             "</w:document>");
@@ -134,7 +209,7 @@ public static class PztDocxExporter
     {
         var size = kind switch
         {
-            ParagraphKind.Title => 24,
+            ParagraphKind.Title => 26,
             ParagraphKind.Heading => 20,
             ParagraphKind.Footer => 14,
             _ => 18
@@ -148,18 +223,18 @@ public static class PztDocxExporter
             _ => 20
         };
 
-        var before = kind == ParagraphKind.Heading ? 160 : 0;
+        var before = kind == ParagraphKind.Heading ? 180 : 0;
         var bold = kind is ParagraphKind.Title or ParagraphKind.Heading ? "<w:b/>" : string.Empty;
         var color = kind == ParagraphKind.Footer ? "<w:color w:val=\"777777\"/>" : string.Empty;
 
         return
             "<w:p>" +
             "<w:pPr><w:spacing w:before=\"" + before + "\" w:after=\"" + after + "\" w:line=\"240\" w:lineRule=\"auto\"/></w:pPr>" +
-            "<w:r><w:rPr>" + bold + color + "<w:sz w:val=\"" + size + "\"/></w:rPr><w:t>" + Escape(text) + "</w:t></w:r>" +
+            "<w:r><w:rPr><w:rFonts w:ascii=\"Aptos\" w:hAnsi=\"Aptos\"/>" + bold + color + "<w:sz w:val=\"" + size + "\"/></w:rPr><w:t>" + Escape(text) + "</w:t></w:r>" +
             "</w:p>";
     }
 
-    private static string Table(string[] headers, IEnumerable<string[]> rows)
+    private static string Table(string[] headers, int[] widths, IEnumerable<TableRow> rows)
     {
         var builder = new StringBuilder();
 
@@ -167,54 +242,72 @@ public static class PztDocxExporter
             "<w:tbl>" +
             "<w:tblPr>" +
             "<w:tblW w:w=\"5000\" w:type=\"pct\"/>" +
-            "<w:tblLayout w:type=\"autofit\"/>" +
+            "<w:tblLayout w:type=\"fixed\"/>" +
             "<w:tblBorders>" +
-            "<w:top w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"8A8A8A\"/>" +
-            "<w:left w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"8A8A8A\"/>" +
-            "<w:bottom w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"8A8A8A\"/>" +
-            "<w:right w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"8A8A8A\"/>" +
-            "<w:insideH w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"D0D0D0\"/>" +
-            "<w:insideV w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"D0D0D0\"/>" +
+            "<w:top w:val=\"single\" w:sz=\"6\" w:space=\"0\" w:color=\"6B7A80\"/>" +
+            "<w:left w:val=\"single\" w:sz=\"6\" w:space=\"0\" w:color=\"6B7A80\"/>" +
+            "<w:bottom w:val=\"single\" w:sz=\"6\" w:space=\"0\" w:color=\"6B7A80\"/>" +
+            "<w:right w:val=\"single\" w:sz=\"6\" w:space=\"0\" w:color=\"6B7A80\"/>" +
+            "<w:insideH w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"D2D9DD\"/>" +
+            "<w:insideV w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"D2D9DD\"/>" +
             "</w:tblBorders>" +
             "<w:tblCellMar>" +
-            "<w:top w:w=\"70\" w:type=\"dxa\"/><w:left w:w=\"70\" w:type=\"dxa\"/>" +
-            "<w:bottom w:w=\"70\" w:type=\"dxa\"/><w:right w:w=\"70\" w:type=\"dxa\"/>" +
+            "<w:top w:w=\"80\" w:type=\"dxa\"/><w:left w:w=\"80\" w:type=\"dxa\"/>" +
+            "<w:bottom w:w=\"80\" w:type=\"dxa\"/><w:right w:w=\"80\" w:type=\"dxa\"/>" +
             "</w:tblCellMar>" +
             "</w:tblPr>");
 
-        builder.Append(Row(headers, header: true));
+        builder.Append(RowXml(new TableRow(headers, "D9E8E7", true), widths, header: true));
 
-        foreach (string[] row in rows)
+        foreach (TableRow row in rows)
         {
-            builder.Append(Row(row, header: false));
+            builder.Append(RowXml(row, widths, header: false));
         }
 
         builder.Append("</w:tbl>");
         return builder.ToString();
     }
 
-    private static string Row(IEnumerable<string> cells, bool header)
+    private static string RowXml(TableRow row, int[] widths, bool header)
     {
         var builder = new StringBuilder();
-
         builder.Append("<w:tr>");
 
-        foreach (string cell in cells)
+        for (int index = 0; index < row.Cells.Length; index++)
         {
-            var shading = header ? "<w:shd w:fill=\"EDEDED\"/>" : string.Empty;
-            var bold = header ? "<w:b/>" : string.Empty;
+            string cell = row.Cells[index];
+            int width = index < widths.Length ? widths[index] : 1500;
+            string fill = row.Fill ?? (header ? "D9E8E7" : "FFFFFF");
+            string shading = "<w:shd w:fill=\"" + fill + "\"/>";
+            string bold = header || row.Bold ? "<w:b/>" : string.Empty;
+            string align = IsNumericColumn(index, row.Cells.Length) ? "<w:jc w:val=\"right\"/>" : string.Empty;
 
             builder.Append(
                 "<w:tc>" +
-                "<w:tcPr>" + shading + "<w:vAlign w:val=\"center\"/></w:tcPr>" +
-                "<w:p><w:pPr><w:spacing w:before=\"0\" w:after=\"0\" w:line=\"220\" w:lineRule=\"auto\"/></w:pPr>" +
-                "<w:r><w:rPr>" + bold + "<w:sz w:val=\"18\"/></w:rPr><w:t>" + Escape(cell) + "</w:t></w:r>" +
+                "<w:tcPr><w:tcW w:w=\"" + width + "\" w:type=\"dxa\"/>" + shading + "<w:vAlign w:val=\"center\"/></w:tcPr>" +
+                "<w:p><w:pPr>" + align + "<w:spacing w:before=\"0\" w:after=\"0\" w:line=\"220\" w:lineRule=\"auto\"/></w:pPr>" +
+                "<w:r><w:rPr><w:rFonts w:ascii=\"Aptos\" w:hAnsi=\"Aptos\"/>" + bold + "<w:sz w:val=\"17\"/></w:rPr><w:t>" + Escape(cell) + "</w:t></w:r>" +
                 "</w:p>" +
                 "</w:tc>");
         }
 
         builder.Append("</w:tr>");
         return builder.ToString();
+    }
+
+    private static bool IsNumericColumn(int index, int columnCount)
+    {
+        if (index == 0)
+        {
+            return true;
+        }
+
+        return columnCount switch
+        {
+            3 => index == 2,
+            7 => index is 3 or 4 or 5,
+            _ => false
+        };
     }
 
     private static string BuildDetails(AreaBalanceRow row)
@@ -236,12 +329,75 @@ public static class PztDocxExporter
             parts.Add($"PBC: {SquareMeters(row.BioAreaSquareMeters)}");
         }
 
-        return parts.Count == 0 ? "-" : string.Join(", ", parts);
+        return parts.Count == 0 ? "-" : string.Join("; ", parts);
+    }
+
+    private static int CategoryOrder(string category)
+    {
+        if (string.Equals(category, PztCategories.SiteBoundary, StringComparison.OrdinalIgnoreCase)) return 0;
+        if (string.Equals(category, PztCategories.Building, StringComparison.OrdinalIgnoreCase)) return 1;
+        if (string.Equals(category, PztCategories.AccessRoad, StringComparison.OrdinalIgnoreCase)) return 2;
+        if (string.Equals(category, PztCategories.Walkway, StringComparison.OrdinalIgnoreCase)) return 3;
+        if (string.Equals(category, PztCategories.Parking, StringComparison.OrdinalIgnoreCase)) return 4;
+        if (string.Equals(category, PztCategories.BioActive, StringComparison.OrdinalIgnoreCase)) return 5;
+        if (string.Equals(category, PztCategories.SemiPermeable, StringComparison.OrdinalIgnoreCase)) return 6;
+        return 99;
+    }
+
+    private static string FormatCategory(string category)
+    {
+        return string.IsNullOrWhiteSpace(category) ? "-" : category;
     }
 
     private static string FormatState(string state)
     {
         return string.IsNullOrWhiteSpace(state) ? "-" : state;
+    }
+
+    private static string NormalizeStateGroup(string state)
+    {
+        if (string.Equals(state, "Projektowana", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(state, "Projektowane", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Projektowane";
+        }
+
+        if (string.Equals(state, "Istniejaca", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(state, "Istniejace", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(state, "Istniejąca", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(state, "Istniejące", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Istniejace";
+        }
+
+        return string.IsNullOrWhiteSpace(state) ? "Bez okreslonego stanu" : state.Trim();
+    }
+
+    private static string FormatStateGroup(string state)
+    {
+        return state switch
+        {
+            "Projektowane" => "Elementy projektowane",
+            "Istniejace" => "Elementy istniejace",
+            "Bez okreslonego stanu" => "Elementy bez okreslonego stanu",
+            _ => $"Elementy: {state}"
+        };
+    }
+
+    private static int StateOrder(string state)
+    {
+        return state switch
+        {
+            "Projektowane" => 0,
+            "Istniejace" => 1,
+            "Bez okreslonego stanu" => 2,
+            _ => 3
+        };
+    }
+
+    private static string ShareOfSite(double area, double siteArea)
+    {
+        return siteArea > 0 ? Percent(area / siteArea * 100).Replace("%", string.Empty) : "-";
     }
 
     private static string FormatValidationResult(ValidationSeverity severity)
@@ -274,6 +430,8 @@ public static class PztDocxExporter
     {
         return SecurityElement.Escape(value) ?? string.Empty;
     }
+
+    private sealed record TableRow(string[] Cells, string? Fill, bool Bold);
 
     private enum ParagraphKind
     {

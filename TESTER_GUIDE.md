@@ -2,11 +2,11 @@
 
 ## Cel testu
 
-Sprawdzamy workflow i logike bilansu PZT w prototypie `0.2.2-mvp-test` dla Revit 2025.03. To nie jest narzedzie do finalnej dokumentacji ani rozliczen formalnych.
+Sprawdzamy workflow i logike bilansu PZT w prototypie `0.2.3-mvp-test` dla Revit 2025.03. To nie jest narzedzie do finalnej dokumentacji ani rozliczen formalnych.
 
 ## Przed testem
 
-- Zainstaluj wtyczke z paczki `PztGenerator-0.2.2-mvp-test-installer.zip`.
+- Zainstaluj wtyczke z paczki `PztGenerator-0.2.3-mvp-test-installer.zip`.
 - Po rozpakowaniu kliknij `INSTALUJ_PZT_GENERATOR.bat` i podaj sciezke folderu Revit 2025.
 - Test wymaga pelnej wersji Autodesk Revit 2025. Revit LT nie obsluguje tej wtyczki.
 - Uruchom Revit ponownie po instalacji wtyczki.
@@ -18,26 +18,27 @@ Sprawdzamy workflow i logike bilansu PZT w prototypie `0.2.2-mvp-test` dla Revit
 1. Narysuj region wypelnienia jako dzialke, np. okolo `1000 m2`.
 2. Zaznacz region dzialki i wybierz `PZT > Przypisz typ > Granica terenu / dzialki`.
 3. Narysuj region budynku, np. `200 m2`.
-4. Zaznacz budynek i wybierz `Zabudowa projektowana`.
-5. Otworz `PZT > Bilans obszarow > Typy`, wybierz `Zabudowa projektowana`, ustaw np. `3` kondygnacje i zastosuj do zaznaczonego budynku.
-6. Narysuj dojazd/dojscie, np. `100 m2`, i przypisz `Dojazdy` albo `Dojscia`.
-7. Narysuj parking i przypisz `Parking`.
-8. Kliknij `PZT > MPZP` i wpisz przykladowo:
+4. Zaznacz budynek i wybierz `Zabudowa projektowana` albo `Zabudowa istniejaca`.
+5. Otworz `PZT > Bilans obszarow > Typy`, wybierz typ zabudowy, ustaw np. `3` kondygnacje i zastosuj do zaznaczonego budynku.
+6. Nie rysuj osobnej PBC. Po przypisaniu granicy dzialki bilans policzy PBC automatycznie jako powierzchnie dzialki po odjeciu zabudowy, dojazdow, dojsc i parkingow.
+7. Narysuj dojazd/dojscie, np. `100 m2`, i przypisz `Dojazdy` albo `Dojscia`.
+8. Narysuj parking i przypisz `Parking`.
+9. Kliknij `PZT > MPZP` i wpisz przykladowo:
    - min. PBC: `30%`,
    - max. powierzchnia zabudowy: `40%`,
    - min. intensywnosc: `0.2`,
    - max. intensywnosc: `1.0`.
-9. Kliknij `PZT > Bilans obszarow`.
-10. Sprawdz zakladki `Bilans`, `MPZP`, `Parking`, `Typy`, `Grafika`.
-11. W zakladce `MPZP` sprawdz liste warunkow i zapisz `Eksport MPZP DOCX`.
-12. Zapisz caly raport przyciskiem `Eksport DOCX`.
-13. W zakladce `Grafika` kliknij `Zastosuj style do regionow` i sprawdz obwiednie oraz wypelnienia.
+10. Kliknij `PZT > Bilans obszarow`.
+11. Sprawdz zakladki `Bilans`, `MPZP`, `Parking`, `Typy`, `Grafika`. W bilansie powinna pojawic sie pozycja automatycznej PBC z granicy dzialki.
+12. W zakladce `MPZP` sprawdz liste warunkow i zapisz `Eksport MPZP DOCX`.
+13. Zapisz caly raport przyciskiem `Eksport DOCX`.
+14. W zakladce `Grafika` kliknij `Zastosuj style do regionow` i sprawdz obwiednie oraz wypelnienia.
 
 ## Co tester ma ocenic
 
 - Czy workflow przypisywania typow jest zrozumialy.
 - Czy nazwy kategorii PZT sa jasne.
-- Czy bilans pokazuje oczekiwane wartosci.
+- Czy bilans pokazuje oczekiwane wartosci, w tym automatyczna PBC z granicy dzialki.
 - Czy rozdzielenie na `Stan` projektowany/istniejacy jest czytelne.
 - Czy walidacja MPZP czytelnie tlumaczy rachunek.
 - Czy eksport DOCX bilansu i MPZP nadaje sie jako tabela do opisu PAB/PT.

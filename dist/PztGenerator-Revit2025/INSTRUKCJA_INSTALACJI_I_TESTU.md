@@ -1,6 +1,6 @@
 # PZT Generator MVP - instrukcja instalacji i testu
 
-Wersja: `0.2.2-mvp-test`
+Wersja: `0.2.3-mvp-test`
 
 To jest prototyp testowy dla pelnej wersji Autodesk Revit 2025 / 2025.03. Nie jest to jeszcze wersja produkcyjna.
 
@@ -54,26 +54,27 @@ oraz tworzy manifest Revita:
 4. Kliknij `PZT > Przygotuj PZT`, jezeli projekt nie ma jeszcze parametrow PZT.
 5. Kliknij `PZT > Przypisz typ` i wybierz `Granica terenu / dzialki`.
 6. Narysuj region budynku.
-7. Zaznacz region budynku, kliknij `PZT > Przypisz typ` i wybierz `Zabudowa projektowana`.
-8. Narysuj dojazd albo dojscie i przypisz mu typ `Dojazdy` albo `Dojscia`.
-9. Narysuj parking i przypisz typ `Parking`.
-10. Kliknij `PZT > MPZP` i wpisz przykladowe wymagania:
+7. Zaznacz region budynku, kliknij `PZT > Przypisz typ` i wybierz `Zabudowa projektowana` albo `Zabudowa istniejaca`.
+8. Nie tworz osobnego obszaru PBC. PBC policzy sie automatycznie z granicy dzialki po odjeciu zabudowy, dojazdow, dojsc i parkingow.
+9. Narysuj dojazd albo dojscie i przypisz mu typ `Dojazdy` albo `Dojscia`.
+10. Narysuj parking i przypisz typ `Parking`.
+11. Kliknij `PZT > MPZP` i wpisz przykladowe wymagania:
     - min. PBC: `30`
     - max. powierzchnia zabudowy: `40`
     - min. intensywnosc: `0.2`
     - max. intensywnosc: `1.0`
-11. Kliknij `PZT > Bilans obszarow`.
-12. W zakladce `Bilans` sprawdz powierzchnie i wskazniki.
-13. W zakladce `MPZP` sprawdz warunki oraz wynik `spelniony` / `niespelniony`.
-14. Kliknij `Eksport DOCX`, aby zapisac caly bilans.
-15. W zakladce `MPZP` kliknij `Eksport MPZP DOCX`, aby zapisac tylko liste warunkow.
-16. W zakladce `Grafika` kliknij `Zastosuj style do regionow`, jezeli chcesz odswiezyc kolory, wypelnienia i obwiednie.
+12. Kliknij `PZT > Bilans obszarow`.
+13. W zakladce `Bilans` sprawdz powierzchnie i wskazniki. Pozycja PBC powinna byc automatyczna z granicy dzialki.
+14. W zakladce `MPZP` sprawdz warunki oraz wynik `spelniony` / `niespelniony`.
+15. Kliknij `Eksport DOCX`, aby zapisac caly bilans.
+16. W zakladce `MPZP` kliknij `Eksport MPZP DOCX`, aby zapisac tylko liste warunkow.
+17. W zakladce `Grafika` kliknij `Zastosuj style do regionow`, jezeli chcesz odswiezyc kolory, wypelnienia i obwiednie.
 
 ## 5. Co sprawdzamy w MVP
 
 - Czy zakladka `PZT` pojawia sie po instalacji.
 - Czy przypisywanie typow jest zrozumiale.
-- Czy dzialka, zabudowa, dojazdy, dojscia i parking zliczaja sie poprawnie.
+- Czy dzialka, zabudowa, dojazdy, dojscia i parking zliczaja sie poprawnie oraz czy PBC liczy sie automatycznie z dzialki.
 - Czy walidacja MPZP pokazuje czytelny rachunek.
 - Czy eksport DOCX jest wystarczajaco czytelny do wewnetrznego testu.
 - Czy grafika regionow pomaga w pracy na rysunku.
