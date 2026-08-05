@@ -41,6 +41,7 @@ public sealed class AssignPztPresetCommand : IExternalCommand
             if (window.ShouldUpdatePlotId)
             {
                 PztParameterValue.WriteString(element, PztParameterNames.PlotId, window.PlotId);
+                PztElementDataStorage.WritePlotId(element, window.PlotId);
             }
 
             PztParameterValue.WriteDouble(element, PztParameterNames.BioFactor, window.SelectedPreset.BioFactor);

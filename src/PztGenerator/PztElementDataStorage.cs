@@ -7,6 +7,7 @@ namespace PztGenerator;
 internal static class PztElementDataStorage
 {
     private static readonly Guid SchemaGuid = new("47F67101-63B6-4F52-8F07-8B594ACBD6B4");
+    private static readonly Guid PlotSchemaGuid = new("5E722437-0BD9-4A1A-B34F-5D79B6052D31");
 
     public static void Write(Element element, PztPreset preset)
     {
@@ -22,8 +23,23 @@ internal static class PztElementDataStorage
         element.SetEntity(entity);
     }
 
+    public static void WritePlotId(Element element, string plotId)
+    {
+        Schema schema = GetOrCreatePlotSchema();
+        var entity = new Entity(schema);
+
+        entity.Set(schema.GetField(nameof(PztParameterNames.PlotId)), plotId.Trim());
+
+        element.SetEntity(entity);
+    }
+
     public static string ReadString(Element element, string parameterName)
     {
+        if (string.Equals(parameterName, PztParameterNames.PlotId, StringComparison.Ordinal))
+        {
+            return ReadPlotId(element);
+        }
+
         Entity entity = GetEntity(element);
 
         if (!entity.IsValid())
@@ -69,6 +85,26 @@ internal static class PztElementDataStorage
         return fieldName is null ? null : schema.GetField(fieldName);
     }
 
+    private static string ReadPlotId(Element element)
+    {
+        Schema? schema = Schema.Lookup(PlotSchemaGuid);
+
+        if (schema is null)
+        {
+            return string.Empty;
+        }
+
+        Entity entity = element.GetEntity(schema);
+
+        if (!entity.IsValid())
+        {
+            return string.Empty;
+        }
+
+        Field? field = schema.GetField(nameof(PztParameterNames.PlotId));
+        return field is null ? string.Empty : entity.Get<string>(field).Trim();
+    }
+
     private static Schema GetOrCreateSchema()
     {
         Schema? existingSchema = Schema.Lookup(SchemaGuid);
@@ -87,6 +123,24 @@ internal static class PztElementDataStorage
         builder.AddSimpleField(nameof(PztParameterNames.BioFactor), typeof(string));
         builder.AddSimpleField(nameof(PztParameterNames.Floors), typeof(string));
         builder.AddSimpleField(nameof(PztParameterNames.StoreyHeight), typeof(string));
+
+        return builder.Finish();
+    }
+
+    private static Schema GetOrCreatePlotSchema()
+    {
+        Schema? existingSchema = Schema.Lookup(PlotSchemaGuid);
+
+        if (existingSchema is not null)
+        {
+            return existingSchema;
+        }
+
+        var builder = new SchemaBuilder(PlotSchemaGuid);
+        builder.SetSchemaName("PztGeneratorPlotDataText");
+        builder.SetReadAccessLevel(AccessLevel.Public);
+        builder.SetWriteAccessLevel(AccessLevel.Public);
+        builder.AddSimpleField(nameof(PztParameterNames.PlotId), typeof(string));
 
         return builder.Finish();
     }
