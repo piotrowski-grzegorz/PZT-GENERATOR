@@ -19,6 +19,10 @@ public partial class AssignPztPresetWindow : Window
 
     public PztPreset? SelectedPreset => viewModel.SelectedPreset;
 
+    public string PlotId => viewModel.PlotId.Trim();
+
+    public bool ShouldUpdatePlotId => !string.IsNullOrWhiteSpace(viewModel.PlotId);
+
     private void AssignButton_Click(object sender, RoutedEventArgs e)
     {
         DialogResult = true;
@@ -29,6 +33,7 @@ public partial class AssignPztPresetWindow : Window
 internal sealed class AssignPztPresetViewModel : INotifyPropertyChanged
 {
     private PztPreset? selectedPreset;
+    private string plotId = string.Empty;
 
     public AssignPztPresetViewModel(int selectedAreaCount)
     {
@@ -42,6 +47,16 @@ internal sealed class AssignPztPresetViewModel : INotifyPropertyChanged
     public string SelectionText { get; }
 
     public IReadOnlyList<PztPreset> Presets { get; }
+
+    public string PlotId
+    {
+        get => plotId;
+        set
+        {
+            plotId = value;
+            OnPropertyChanged();
+        }
+    }
 
     public PztPreset? SelectedPreset
     {

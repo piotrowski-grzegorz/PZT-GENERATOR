@@ -37,6 +37,12 @@ public sealed class AssignPztPresetCommand : IExternalCommand
         {
             PztParameterValue.WriteString(element, PztParameterNames.Category, window.SelectedPreset.Category);
             PztParameterValue.WriteString(element, PztParameterNames.Status, window.SelectedPreset.Status);
+
+            if (window.ShouldUpdatePlotId)
+            {
+                PztParameterValue.WriteString(element, PztParameterNames.PlotId, window.PlotId);
+            }
+
             PztParameterValue.WriteDouble(element, PztParameterNames.BioFactor, window.SelectedPreset.BioFactor);
             PztParameterValue.WriteDouble(element, PztParameterNames.Floors, window.SelectedPreset.Floors);
             PztParameterValue.WriteDouble(element, PztParameterNames.StoreyHeight, window.SelectedPreset.StoreyHeight);

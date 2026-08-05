@@ -3,6 +3,7 @@ namespace PztGenerator;
 internal static class PztParameterNames
 {
     public const string Category = "PZT_Kategoria";
+    public const string PlotId = "PZT_Dzialka";
     public const string BioFactor = "PZT_Wspolczynnik_Bio";
     public const string Status = "PZT_Status";
     public const string Floors = "PZT_Liczba_Kondygnacji";

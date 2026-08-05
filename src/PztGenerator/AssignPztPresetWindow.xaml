@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="PZT - przypisz typ"
         Width="420"
-        Height="250"
+        Height="310"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner">
     <StackPanel Margin="16">
@@ -16,13 +16,22 @@
                   SelectedItem="{Binding SelectedPreset}"
                   DisplayMemberPath="Name"
                   Height="28" />
+        <TextBlock Text="Dzialka / indeks"
+                   Margin="0,12,0,4" />
+        <TextBox Text="{Binding PlotId, UpdateSourceTrigger=PropertyChanged}"
+                 Height="28"
+                 VerticalContentAlignment="Center" />
+        <TextBlock Text="Ten sam indeks wpisz dla granicy dzialki i elementow, ktore maja wejsc do jej bilansu. Puste pole nie zmienia przypisania dzialki."
+                   TextWrapping="Wrap"
+                   Margin="0,8,0,0"
+                   Foreground="#555555" />
         <TextBlock Text="{Binding PresetDescription}"
                    TextWrapping="Wrap"
                    Margin="0,12,0,0"
                    Foreground="#555555" />
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right"
-                    Margin="0,22,0,0">
+                    Margin="0,18,0,0">
             <Button Content="Anuluj"
                     Width="84"
                     Height="28"

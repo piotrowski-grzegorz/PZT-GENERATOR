@@ -6,8 +6,13 @@ public sealed record PztAreaItem(
     double AreaSquareMeters,
     double BioFactor,
     double Floors,
-    double StoreyHeight)
+    double StoreyHeight,
+    string PlotId = "")
 {
+    public string NormalizedPlotId => PlotId.Trim();
+
+    public bool HasPlotId => !string.IsNullOrWhiteSpace(NormalizedPlotId);
+
     public double BioAreaSquareMeters => AreaSquareMeters * BioFactor;
 
     public double GrossFloorAreaSquareMeters => IsBuilding ? AreaSquareMeters * Math.Max(Floors, 1) : 0;

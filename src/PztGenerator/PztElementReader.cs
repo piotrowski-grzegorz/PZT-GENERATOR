@@ -50,6 +50,7 @@ internal static class PztElementReader
     {
         string category = ReadString(element, PztParameterNames.Category);
         string status = ReadString(element, PztParameterNames.Status);
+        string plotId = ReadString(element, PztParameterNames.PlotId);
 
         NormalizeLegacyTypeValues(ref category, ref status);
 
@@ -59,7 +60,8 @@ internal static class PztElementReader
             areaSquareMeters,
             ReadDouble(element, PztParameterNames.BioFactor),
             ReadDouble(element, PztParameterNames.Floors),
-            ReadDouble(element, PztParameterNames.StoreyHeight));
+            ReadDouble(element, PztParameterNames.StoreyHeight),
+            plotId);
     }
 
     private static string ReadString(Element element, string parameterName)

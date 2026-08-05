@@ -9,6 +9,7 @@ var tests = new (string Name, Action Run)[]
     ("Intensity uses gross floor area", BalanceCalculatesIntensity),
     ("MPZP validation reports min and max failures", MpzpValidationReportsFailures),
     ("Balance exposes automatic PBC and existing buildings", BalanceExposesAutomaticPbcAndExistingBuildings),
+    ("Balance creates per-plot reports", BalanceCreatesPerPlotReports),
     ("DOCX export creates styled PAB tables", DocxExportCreatesStyledPabTables)
 };
 
@@ -89,6 +90,34 @@ static void BalanceExposesAutomaticPbcAndExistingBuildings()
         ?? throw new InvalidOperationException("Expected existing building row in balance.");
 
     AssertEqual(75, existingBuilding.AreaSquareMeters, 0.0001);
+}
+static void BalanceCreatesPerPlotReports()
+{
+    PztAreaItem[] items =
+    [
+        new(PztCategories.SiteBoundary, string.Empty, 1000, 0, 0, 0, "A"),
+        new(PztCategories.Building, "Projektowana", 200, 0, 2, 3, "A"),
+        new(PztCategories.AccessRoad, "Projektowana", 100, 0, 0, 0, "A"),
+        new(PztCategories.SiteBoundary, string.Empty, 500, 0, 0, 0, "B"),
+        new(PztCategories.Building, "Istniejaca", 50, 0, 1, 3, "B"),
+        new(PztCategories.Parking, "Projektowana", 25, 0, 0, 0, "B")
+    ];
+
+    UrbanReport report = PztBalanceService.BuildUrbanReport(items, new MpzpRequirements(0, 0, 0, 0, 0), ParkingSettings.Default);
+
+    AssertEqual(1500, report.SiteAreaSquareMeters, 0.0001);
+    AssertEqual(250, report.BuildingFootprintSquareMeters, 0.0001);
+    AssertEqual(2, report.PlotReportsSafe.Count, 0.0001);
+
+    UrbanReport plotA = report.PlotReportsSafe.First(plot => plot.PlotId == "A").Report;
+    UrbanReport plotB = report.PlotReportsSafe.First(plot => plot.PlotId == "B").Report;
+
+    AssertEqual(1000, plotA.SiteAreaSquareMeters, 0.0001);
+    AssertEqual(200, plotA.BuildingFootprintSquareMeters, 0.0001);
+    AssertEqual(700, plotA.BioAreaSquareMeters, 0.0001);
+    AssertEqual(500, plotB.SiteAreaSquareMeters, 0.0001);
+    AssertEqual(50, plotB.BuildingFootprintSquareMeters, 0.0001);
+    AssertEqual(425, plotB.BioAreaSquareMeters, 0.0001);
 }
 static void MpzpValidationReportsFailures()
 {

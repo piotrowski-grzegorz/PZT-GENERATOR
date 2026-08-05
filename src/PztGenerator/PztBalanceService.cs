@@ -12,6 +12,54 @@ public static class PztBalanceService
         List<PztAreaItem> areaItems = allAreaItems
             .Where(item => !item.IsUnassigned && !item.HasInvalidCategory)
             .ToList();
+        IReadOnlyCollection<PlotBalanceReport> plotReports = BuildPlotReports(areaItems, requirements, parkingSettings);
+        UrbanReport report = BuildReport(areaItems, requirements, parkingSettings, plotReports);
+        List<ValidationMessage> messages = report.ValidationMessages.ToList();
+
+        if (plotReports.Count > 0)
+        {
+            int plotlessCount = areaItems.Count(item => !item.HasPlotId);
+
+            if (plotlessCount > 0)
+            {
+                messages.Insert(0, new ValidationMessage($"Elementy bez indeksu dzialki `PZT_Dzialka`: {plotlessCount}. Wejda do bilansu calosciowego, ale nie do bilansu konkretnej dzialki.", ValidationSeverity.Warning));
+            }
+        }
+
+        if (unassignedCount > 0)
+        {
+            messages.Insert(0, new ValidationMessage($"Pominieto elementy bez typu PZT: {unassignedCount}. Zaznacz je i uzyj `Przypisz typ`, jesli maja wejsc do bilansu.", ValidationSeverity.Warning));
+        }
+
+        if (invalidCategoryCount > 0)
+        {
+            messages.Insert(0, new ValidationMessage($"Pominieto elementy z nieprawidlowa kategoria: {invalidCategoryCount}. Uzyj `Przypisz typ`, zamiast wpisywac wartosc recznie.", ValidationSeverity.Warning));
+        }
+
+        return report with { ValidationMessages = messages };
+    }
+
+    private static IReadOnlyCollection<PlotBalanceReport> BuildPlotReports(
+        IReadOnlyCollection<PztAreaItem> areaItems,
+        MpzpRequirements requirements,
+        ParkingSettings parkingSettings)
+    {
+        return areaItems
+            .Where(item => item.HasPlotId)
+            .GroupBy(item => item.NormalizedPlotId, StringComparer.OrdinalIgnoreCase)
+            .OrderBy(group => group.Key, StringComparer.CurrentCultureIgnoreCase)
+            .Select(group => new PlotBalanceReport(
+                group.Key,
+                BuildReport(group.ToList(), requirements, parkingSettings, Array.Empty<PlotBalanceReport>())))
+            .ToList();
+    }
+
+    private static UrbanReport BuildReport(
+        IReadOnlyCollection<PztAreaItem> areaItems,
+        MpzpRequirements requirements,
+        ParkingSettings parkingSettings,
+        IReadOnlyCollection<PlotBalanceReport> plotReports)
+    {
         double siteArea = Math.Max(0, areaItems.Where(item => item.IsSiteBoundary).Sum(item => item.AreaSquareMeters));
         double buildingFootprint = areaItems.Where(item => item.IsBuilding).Sum(item => item.AreaSquareMeters);
         double hardenedArea = areaItems.Where(item => item.IsHardened).Sum(item => item.AreaSquareMeters);
@@ -44,16 +92,6 @@ public static class PztBalanceService
             bioPercent,
             intensity);
 
-        if (unassignedCount > 0)
-        {
-            messages.Insert(0, new ValidationMessage($"Pominieto elementy bez typu PZT: {unassignedCount}. Zaznacz je i uzyj `Przypisz typ`, jesli maja wejsc do bilansu.", ValidationSeverity.Warning));
-        }
-
-        if (invalidCategoryCount > 0)
-        {
-            messages.Insert(0, new ValidationMessage($"Pominieto elementy z nieprawidlowa kategoria: {invalidCategoryCount}. Uzyj `Przypisz typ`, zamiast wpisywac wartosc recznie.", ValidationSeverity.Warning));
-        }
-
         return new UrbanReport(
             rows,
             requirements,
@@ -70,7 +108,8 @@ public static class PztBalanceService
             regularParkingSpaceCount,
             parkingSettings.AccessibleSpaceCount,
             parkingSettings,
-            messages);
+            messages,
+            plotReports);
     }
 
     private static List<AreaBalanceRow> BuildRows(IReadOnlyCollection<PztAreaItem> areaItems, double siteArea, double bioArea)

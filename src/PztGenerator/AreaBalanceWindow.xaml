@@ -115,6 +115,34 @@
                 </DockPanel>
             </TabItem>
 
+            <TabItem Header="Dzialki">
+                <DockPanel Margin="0,10,0,0">
+                    <TextBlock DockPanel.Dock="Top"
+                               Text="Bilanse czastkowe wedlug parametru PZT_Dzialka. Ten sam indeks wpisz dla granicy dzialki i elementow, ktore do niej naleza."
+                               Foreground="#555555"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,10" />
+                    <DataGrid ItemsSource="{Binding PlotReports}"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              IsReadOnly="True"
+                              HeadersVisibility="Column"
+                              GridLinesVisibility="Horizontal">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Dzialka" Binding="{Binding PlotId}" Width="110" />
+                            <DataGridTextColumn Header="Pow. dzialki" Binding="{Binding SiteAreaText}" Width="130" />
+                            <DataGridTextColumn Header="Zabudowa" Binding="{Binding BuildingFootprintText}" Width="130" />
+                            <DataGridTextColumn Header="Wsk. zab." Binding="{Binding BuildingCoverageText}" Width="90" />
+                            <DataGridTextColumn Header="Utwardzona" Binding="{Binding HardenedAreaText}" Width="120" />
+                            <DataGridTextColumn Header="PBC" Binding="{Binding BioAreaText}" Width="130" />
+                            <DataGridTextColumn Header="PBC %" Binding="{Binding BioPercentText}" Width="90" />
+                            <DataGridTextColumn Header="Intens." Binding="{Binding IntensityText}" Width="80" />
+                            <DataGridTextColumn Header="Uwagi" Binding="{Binding NotesText}" Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
             <TabItem Header="MPZP">
                 <DockPanel Margin="0,10,0,0">
                     <StackPanel DockPanel.Dock="Top">

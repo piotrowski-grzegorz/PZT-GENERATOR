@@ -22,6 +22,7 @@ public sealed class SetupPztParametersCommand : IExternalCommand
         BuiltInCategory[] pztElementCategories = [BuiltInCategory.OST_Areas, BuiltInCategory.OST_DetailComponents];
 
         addedCount += EnsureParameter(application.Application, document, PztParameterNames.Category, SpecTypeId.String.Text, pztElementCategories) ? 1 : 0;
+        addedCount += EnsureParameter(application.Application, document, PztParameterNames.PlotId, SpecTypeId.String.Text, pztElementCategories) ? 1 : 0;
         addedCount += EnsureParameter(application.Application, document, PztParameterNames.BioFactor, SpecTypeId.Number, pztElementCategories) ? 1 : 0;
         addedCount += EnsureParameter(application.Application, document, PztParameterNames.Status, SpecTypeId.String.Text, pztElementCategories) ? 1 : 0;
         addedCount += EnsureParameter(application.Application, document, PztParameterNames.Floors, SpecTypeId.Number, pztElementCategories) ? 1 : 0;

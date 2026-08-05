@@ -2,7 +2,7 @@
 
 ## Aktualna wersja
 
-- Wersja prototypu: `0.2.4-mvp-test`
+- Wersja prototypu: `0.2.5-mvp-test`
 - Revit: 2025 / 2025.03
 - Revit LT: nieobslugiwany, brak obslugi dodatkow Revit API
 - Status: prototyp funkcjonalny, nie produkcyjny
@@ -14,7 +14,7 @@
 - Przyciski: `Przygotuj PZT`, `Przypisz typ`, `MPZP`, `Bilans obszarow`.
 - Parametry PZT dla obszarow i regionow wypelnienia.
 - Stale typy PZT zamiast dowolnego wpisywania kategorii.
-- Bilans powierzchni dzialki, zabudowy, utwardzen, automatycznej PBC, intensywnosci i parkingow.
+- Bilans powierzchni dzialki, zabudowy, utwardzen, automatycznej PBC, intensywnosci i parkingow.`r`n- Bilanse czastkowe dla wielu dzialek wedlug parametru tekstowego `PZT_Dzialka`.
 - Bilans rozdziela pozycje wedlug kategorii i stanu, np. projektowana/istniejaca.
 - PBC liczona automatycznie z granicy dzialki: powierzchnia dzialki minus zabudowa i utwardzenia plus biologiczna czesc nawierzchni przepuszczalnych.
 - Walidacja MPZP z komunikatami sukcesu/bledu i rachunkiem.
@@ -25,7 +25,7 @@
 - Eksport DOCX walidacji MPZP z lista warunkow i statusem spelnienia.
 - Zwarty uklad DOCX przygotowany pod wklejenie tabel do opisu PAB/PT.
 - Uproszczona zakladka `Typy`: tymczasowo tylko typ, kategoria i stan.
-- Prosty instalator testerski ZIP: `dist/PztGenerator-0.2.4-mvp-test-installer.zip`.
+- Prosty instalator testerski ZIP: `dist/PztGenerator-0.2.5-mvp-test-installer.zip`.
 - Instrukcja instalacji i minimalnego testu w paczce instalacyjnej.
 - Serwis `PztBalanceService` dla budowania raportu.
 - Serwis `MpzpValidationService` dla walidacji MPZP.
@@ -44,7 +44,7 @@
 - Brak analizy chlonnosci i wariantowania urbanistycznego.
 - Testy sa lekkim runnerem konsolowym, bez pelnego frameworka testowego.
 - Czesc przeplywu zalezy od poprawnego przypisania typow PZT przez uzytkownika.
-- Automatyczna PBC wymaga przypisania granicy dzialki; recznie rysowana PBC pozostaje tylko awaryjna, gdy nie ma granicy.
+- Automatyczna PBC wymaga przypisania granicy dzialki; recznie rysowana PBC pozostaje tylko awaryjna, gdy nie ma granicy.`r`n- Bilanse wielu dzialek w MVP wymagaja recznego wpisania tego samego `PZT_Dzialka` na granicy i elementach; brak jeszcze automatycznego przypisania po geometrii.
 - MVP wymaga testow na kopii modelu albo prostym modelu testowym.
 
 ## Nastepne zadania
@@ -60,12 +60,12 @@
 - GT-02: zakonczony jako prototyp funkcjonalny `v0.2`.
 - GT-03: zakonczony w kodzie; zakres obejmuje ribbon MPZP, serwisy bilansu i walidacji, testy oraz dokumentacje.
 - GT-004: gotowe jako zasada procesu; kazde kolejne zadanie musi konczyc sie aktualizacja `PROJECT_STATUS.md`.
-- MVP-HANDOFF: gotowe do pokazania testerom jako `0.2.4-mvp-test`; dodano instrukcje testera, widoczna informacje o prototypie i eksport DOCX.
+- MVP-HANDOFF: gotowe do pokazania testerom jako `0.2.5-mvp-test`; dodano instrukcje testera, widoczna informacje o prototypie i eksport DOCX.
 - GT-005: zakonczony w kodzie; dodano eksport DOCX i scalono walidacje z zakladka `MPZP`.
 - GT-006: zakonczony w kodzie; dodano prosty instalator testerski, deinstalator, ZIP i instrukcje testu.
 - GT-007: zakonczony w kodzie; uproszczono typy, zmieniono etykiete `Status` na `Stan` i poprawiono format DOCX.
 - GT-008: zakonczony w kodzie; doprecyzowano brak wsparcia Revit LT i dodano blokade LT w instalatorze.
-- GT-009: zakonczony w kodzie; PBC liczy sie automatycznie z granicy dzialki, a stare wartosci typu `Zabudowa istniejaca` sa mapowane do kategorii `Zabudowa` i stanu `Istniejaca`.`r`n- GT-010: zakonczony w kodzie; regiony wypelnienia czytaja natywna powierzchnie Revita z parametru `HOST_AREA_COMPUTED`, zamiast przeliczac ja z geometrii widoku.
+- GT-009: zakonczony w kodzie; PBC liczy sie automatycznie z granicy dzialki, a stare wartosci typu `Zabudowa istniejaca` sa mapowane do kategorii `Zabudowa` i stanu `Istniejaca`.`r`n- GT-010: zakonczony w kodzie; regiony wypelnienia czytaja natywna powierzchnie Revita z parametru `HOST_AREA_COMPUTED`, zamiast przeliczac ja z geometrii widoku.`r`n- GT-011: zakonczony w kodzie; dodano parametr `PZT_Dzialka`, przypisywanie indeksu dzialki i zakladke `Dzialki` z bilansami czastkowymi oraz bilans calosciowy.
 
 ## Standalone - aktualny prototyp
 

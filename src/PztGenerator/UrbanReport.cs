@@ -16,7 +16,12 @@ public sealed record UrbanReport(
     int RegularParkingSpaceCount,
     int AccessibleParkingSpaceCount,
     ParkingSettings ParkingSettings,
-    IReadOnlyList<ValidationMessage> ValidationMessages)
+    IReadOnlyList<ValidationMessage> ValidationMessages,
+    IReadOnlyCollection<PlotBalanceReport>? PlotReports = null)
 {
     public double TotalAreaSquareMeters => Rows.Sum(row => row.AreaSquareMeters);
+
+    public IReadOnlyCollection<PlotBalanceReport> PlotReportsSafe => PlotReports ?? Array.Empty<PlotBalanceReport>();
 }
+
+public sealed record PlotBalanceReport(string PlotId, UrbanReport Report);

@@ -191,6 +191,8 @@ public sealed class AreaBalanceViewModel
         sourceRows = report.Rows;
         Rows = new ObservableCollection<AreaBalanceRowViewModel>(
             report.Rows.Select(row => new AreaBalanceRowViewModel(row, report)));
+        PlotReports = new ObservableCollection<PlotBalanceViewModel>(
+            report.PlotReportsSafe.Select(plot => new PlotBalanceViewModel(plot)));
 
         SummaryText = $"{report.Rows.Sum(row => row.AreaCount)} obszarow, powierzchnia dzialki: {FormatSquareMeters(report.SiteAreaSquareMeters)}";
         TotalAreaText = FormatSquareMeters(report.TotalAreaSquareMeters);
@@ -217,6 +219,8 @@ public sealed class AreaBalanceViewModel
     }
 
     public ObservableCollection<AreaBalanceRowViewModel> Rows { get; }
+
+    public ObservableCollection<PlotBalanceViewModel> PlotReports { get; }
 
     public UrbanReport Report => report;
 
@@ -291,6 +295,28 @@ public sealed class AreaBalanceViewModel
             string.Empty,
             string.Empty));
 
+        if (report.PlotReportsSafe.Count > 0)
+        {
+            builder.AppendLine();
+            builder.AppendLine("Bilanse dzialek");
+            builder.AppendLine("Dzialka;Pow. dzialki [m2];Pow. zabudowy [m2];Wsk. zabudowy [%];Utwardzona [m2];PBC [m2];PBC [%];Intensywnosc");
+
+            foreach (PlotBalanceReport plot in report.PlotReportsSafe)
+            {
+                UrbanReport plotReport = plot.Report;
+                builder.AppendLine(string.Join(
+                    ";",
+                    EscapeCsv(plot.PlotId),
+                    FormatNumber(plotReport.SiteAreaSquareMeters),
+                    FormatNumber(plotReport.BuildingFootprintSquareMeters),
+                    FormatNumber(plotReport.BuildingCoveragePercent),
+                    FormatNumber(plotReport.HardenedAreaSquareMeters),
+                    FormatNumber(plotReport.BioAreaSquareMeters),
+                    FormatNumber(plotReport.BioPercent),
+                    FormatNumber(plotReport.Intensity)));
+            }
+        }
+
         builder.AppendLine();
         builder.AppendLine("Wskaznik;Wartosc");
         builder.AppendLine($"Powierzchnia dzialki [m2];{FormatNumber(report.SiteAreaSquareMeters)}");
@@ -346,6 +372,42 @@ public sealed class AreaBalanceViewModel
     }
 }
 
+public sealed class PlotBalanceViewModel
+{
+    public PlotBalanceViewModel(PlotBalanceReport plot)
+    {
+        PlotId = plot.PlotId;
+        UrbanReport report = plot.Report;
+        SiteAreaText = AreaBalanceViewModel.FormatSquareMeters(report.SiteAreaSquareMeters);
+        BuildingFootprintText = AreaBalanceViewModel.FormatSquareMeters(report.BuildingFootprintSquareMeters);
+        BuildingCoverageText = report.SiteAreaSquareMeters > 0 ? $"{report.BuildingCoveragePercent:N2}%" : "-";
+        HardenedAreaText = AreaBalanceViewModel.FormatSquareMeters(report.HardenedAreaSquareMeters);
+        BioAreaText = AreaBalanceViewModel.FormatSquareMeters(report.BioAreaSquareMeters);
+        BioPercentText = report.SiteAreaSquareMeters > 0 ? $"{report.BioPercent:N2}%" : "-";
+        IntensityText = report.SiteAreaSquareMeters > 0 ? report.Intensity.ToString("N2", CultureInfo.CurrentCulture) : "-";
+        NotesText = report.SiteAreaSquareMeters > 0
+            ? $"Elementy: {report.Rows.Sum(row => row.AreaCount):N0}"
+            : "Brak granicy dzialki dla tego indeksu";
+    }
+
+    public string PlotId { get; }
+
+    public string SiteAreaText { get; }
+
+    public string BuildingFootprintText { get; }
+
+    public string BuildingCoverageText { get; }
+
+    public string HardenedAreaText { get; }
+
+    public string BioAreaText { get; }
+
+    public string BioPercentText { get; }
+
+    public string IntensityText { get; }
+
+    public string NotesText { get; }
+}
 public sealed class PztTypeSettingsViewModel
 {
     public PztTypeSettingsViewModel(PztPreset preset)

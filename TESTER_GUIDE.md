@@ -2,11 +2,11 @@
 
 ## Cel testu
 
-Sprawdzamy workflow i logike bilansu PZT w prototypie `0.2.4-mvp-test` dla Revit 2025.03. To nie jest narzedzie do finalnej dokumentacji ani rozliczen formalnych.
+Sprawdzamy workflow i logike bilansu PZT w prototypie `0.2.5-mvp-test` dla Revit 2025.03. To nie jest narzedzie do finalnej dokumentacji ani rozliczen formalnych.
 
 ## Przed testem
 
-- Zainstaluj wtyczke z paczki `PztGenerator-0.2.4-mvp-test-installer.zip`.
+- Zainstaluj wtyczke z paczki `PztGenerator-0.2.5-mvp-test-installer.zip`.
 - Po rozpakowaniu kliknij `INSTALUJ_PZT_GENERATOR.bat` i podaj sciezke folderu Revit 2025.
 - Test wymaga pelnej wersji Autodesk Revit 2025. Revit LT nie obsluguje tej wtyczki.
 - Uruchom Revit ponownie po instalacji wtyczki.
