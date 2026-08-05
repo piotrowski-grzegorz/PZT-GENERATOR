@@ -42,7 +42,8 @@ internal static class PztElementReader
 
     private static PztAreaItem CreateFilledRegionItem(FilledRegion region)
     {
-        return CreateItem(region, GetFilledRegionAreaSquareMeters(region));
+        double areaSquareMeters = ReadComputedAreaSquareMeters(region);
+        return CreateItem(region, areaSquareMeters > 0 ? areaSquareMeters : GetFilledRegionAreaSquareMeters(region));
     }
 
     private static PztAreaItem CreateItem(Element element, double areaSquareMeters)
@@ -89,21 +90,46 @@ internal static class PztElementReader
 
     private static void NormalizeLegacyTypeValues(ref string category, ref string status)
     {
-        string trimmedCategory = category.Trim();
+        string normalizedCategory = NormalizeForComparison(category);
 
-        if (string.Equals(trimmedCategory, "Zabudowa istniejaca", StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(trimmedCategory, "Zabudowa istniejÄ…ca", StringComparison.OrdinalIgnoreCase))
+        if (normalizedCategory == "zabudowa istniejaca")
         {
             category = PztCategories.Building;
             status = "Istniejaca";
             return;
         }
 
-        if (string.Equals(trimmedCategory, "Zabudowa projektowana", StringComparison.OrdinalIgnoreCase))
+        if (normalizedCategory == "zabudowa projektowana")
         {
             category = PztCategories.Building;
             status = "Projektowana";
         }
+    }
+
+    private static string NormalizeForComparison(string value)
+    {
+        return value.Trim().ToLowerInvariant()
+            .Replace('\u0105', 'a')
+            .Replace('\u0107', 'c')
+            .Replace('\u0119', 'e')
+            .Replace('\u0142', 'l')
+            .Replace('\u0144', 'n')
+            .Replace('\u00f3', 'o')
+            .Replace('\u015b', 's')
+            .Replace('\u017a', 'z')
+            .Replace('\u017c', 'z');
+    }
+
+    private static double ReadComputedAreaSquareMeters(Element element)
+    {
+        Parameter? areaParameter = element.get_Parameter(BuiltInParameter.HOST_AREA_COMPUTED);
+
+        if (areaParameter?.StorageType != StorageType.Double)
+        {
+            return 0;
+        }
+
+        return UnitUtils.ConvertFromInternalUnits(areaParameter.AsDouble(), UnitTypeId.SquareMeters);
     }
 
     private static double GetFilledRegionAreaSquareMeters(FilledRegion region)

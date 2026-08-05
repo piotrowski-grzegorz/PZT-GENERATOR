@@ -1,6 +1,6 @@
 # PZT Generator MVP - instrukcja instalacji i testu
 
-Wersja: `0.2.3-mvp-test`
+Wersja: `0.2.4-mvp-test`
 
 To jest prototyp testowy dla pelnej wersji Autodesk Revit 2025 / 2025.03. Nie jest to jeszcze wersja produkcyjna.
 
