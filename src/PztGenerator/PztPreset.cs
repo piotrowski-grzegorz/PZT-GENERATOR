@@ -13,8 +13,11 @@ public sealed record PztPreset(
         new("Granica terenu / dzialki", PztCategories.SiteBoundary, string.Empty, 0, 0, 0),
         new("Zabudowa projektowana", PztCategories.Building, "Projektowana", 0, 1, 3),
         new("Zabudowa istniejaca", PztCategories.Building, "Istniejaca", 0, 1, 3),
-        new("Dojazdy", PztCategories.AccessRoad, string.Empty, 0, 0, 0),
+        new("Dojazdy utwardzone", PztCategories.AccessRoad, string.Empty, 0, 0, 0),
+        new("Powierzchnia gruntowa", PztCategories.GroundSurface, string.Empty, 1, 0, 0),
         new("Dojscia", PztCategories.Walkway, string.Empty, 0, 0, 0),
+        new("Place", PztCategories.Square, string.Empty, 0, 0, 0),
+        new("Schody terenowe", PztCategories.TerrainStairs, string.Empty, 0, 0, 0),
         new("Parking", PztCategories.Parking, string.Empty, 0, 0, 0),
         new("Biologicznie czynna", PztCategories.BioActive, string.Empty, 1, 0, 0),
         new("Czesciowo biologicznie czynna 50%", PztCategories.SemiPermeable, string.Empty, 0.5, 0, 0)

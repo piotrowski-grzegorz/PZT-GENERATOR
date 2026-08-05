@@ -337,10 +337,13 @@ public static class PztDocxExporter
         if (string.Equals(category, PztCategories.SiteBoundary, StringComparison.OrdinalIgnoreCase)) return 0;
         if (string.Equals(category, PztCategories.Building, StringComparison.OrdinalIgnoreCase)) return 1;
         if (string.Equals(category, PztCategories.AccessRoad, StringComparison.OrdinalIgnoreCase)) return 2;
-        if (string.Equals(category, PztCategories.Walkway, StringComparison.OrdinalIgnoreCase)) return 3;
-        if (string.Equals(category, PztCategories.Parking, StringComparison.OrdinalIgnoreCase)) return 4;
-        if (string.Equals(category, PztCategories.BioActive, StringComparison.OrdinalIgnoreCase)) return 5;
-        if (string.Equals(category, PztCategories.SemiPermeable, StringComparison.OrdinalIgnoreCase)) return 6;
+        if (string.Equals(category, PztCategories.GroundSurface, StringComparison.OrdinalIgnoreCase)) return 3;
+        if (string.Equals(category, PztCategories.Walkway, StringComparison.OrdinalIgnoreCase)) return 4;
+        if (string.Equals(category, PztCategories.Square, StringComparison.OrdinalIgnoreCase)) return 5;
+        if (string.Equals(category, PztCategories.TerrainStairs, StringComparison.OrdinalIgnoreCase)) return 6;
+        if (string.Equals(category, PztCategories.Parking, StringComparison.OrdinalIgnoreCase)) return 7;
+        if (string.Equals(category, PztCategories.BioActive, StringComparison.OrdinalIgnoreCase)) return 8;
+        if (string.Equals(category, PztCategories.SemiPermeable, StringComparison.OrdinalIgnoreCase)) return 9;
         return 99;
     }
 
@@ -364,8 +367,8 @@ public static class PztDocxExporter
 
         if (string.Equals(state, "Istniejaca", StringComparison.OrdinalIgnoreCase) ||
             string.Equals(state, "Istniejace", StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(state, "Istniejąca", StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(state, "Istniejące", StringComparison.OrdinalIgnoreCase))
+            string.Equals(state, "IstniejÄ…ca", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(state, "IstniejÄ…ce", StringComparison.OrdinalIgnoreCase))
         {
             return "Istniejace";
         }

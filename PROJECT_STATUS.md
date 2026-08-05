@@ -2,7 +2,7 @@
 
 ## Aktualna wersja
 
-- Wersja prototypu: `0.2.6-mvp-test`
+- Wersja prototypu: `0.2.7-mvp-test`
 - Revit: 2025 / 2025.03
 - Revit LT: nieobslugiwany, brak obslugi dodatkow Revit API
 - Status: prototyp funkcjonalny, nie produkcyjny
@@ -25,7 +25,7 @@
 - Eksport DOCX walidacji MPZP z lista warunkow i statusem spelnienia.
 - Zwarty uklad DOCX przygotowany pod wklejenie tabel do opisu PAB/PT.
 - Uproszczona zakladka `Typy`: tymczasowo tylko typ, kategoria i stan.
-- Prosty instalator testerski ZIP: `dist/PztGenerator-0.2.6-mvp-test-installer.zip`.
+- Prosty instalator testerski ZIP: `dist/PztGenerator-0.2.7-mvp-test-installer.zip`.
 - Instrukcja instalacji i minimalnego testu w paczce instalacyjnej.
 - Serwis `PztBalanceService` dla budowania raportu.
 - Serwis `MpzpValidationService` dla walidacji MPZP.
@@ -60,7 +60,7 @@
 - GT-02: zakonczony jako prototyp funkcjonalny `v0.2`.
 - GT-03: zakonczony w kodzie; zakres obejmuje ribbon MPZP, serwisy bilansu i walidacji, testy oraz dokumentacje.
 - GT-004: gotowe jako zasada procesu; kazde kolejne zadanie musi konczyc sie aktualizacja `PROJECT_STATUS.md`.
-- MVP-HANDOFF: gotowe do pokazania testerom jako `0.2.6-mvp-test`; dodano instrukcje testera, widoczna informacje o prototypie i eksport DOCX.
+- MVP-HANDOFF: gotowe do pokazania testerom jako `0.2.7-mvp-test`; dodano instrukcje testera, widoczna informacje o prototypie i eksport DOCX.
 - GT-005: zakonczony w kodzie; dodano eksport DOCX i scalono walidacje z zakladka `MPZP`.
 - GT-006: zakonczony w kodzie; dodano prosty instalator testerski, deinstalator, ZIP i instrukcje testu.
 - GT-007: zakonczony w kodzie; uproszczono typy, zmieniono etykiete `Status` na `Stan` i poprawiono format DOCX.
@@ -101,3 +101,4 @@
 
 
 - GT-012: zakonczony w kodzie; poprawiono zapis indeksu dzialki do zapasowego magazynu elementu, zeby zakladka Dzialki wypelniala sie rowniez wtedy, gdy parametr projektu PZT_Dzialka nie byl dostepny na regionie wypelnienia.
+- GT-013: zakonczony w kodzie; rozbito bilans dzialek na zabudowe projektowana/istniejaca oraz kategorie komunikacji: dojazdy utwardzone, powierzchnia gruntowa, dojscia, place, schody terenowe i parking. Powierzchnia gruntowa nie pomniejsza PBC.

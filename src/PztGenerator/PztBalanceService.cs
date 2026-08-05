@@ -152,10 +152,13 @@ public static class PztBalanceService
             PztCategories.SiteBoundary => 0,
             PztCategories.Building => 1,
             PztCategories.AccessRoad => 2,
-            PztCategories.Walkway => 3,
-            PztCategories.Parking => 4,
-            PztCategories.SemiPermeable => 5,
-            PztCategories.BioActive => 6,
+            PztCategories.GroundSurface => 3,
+            PztCategories.Walkway => 4,
+            PztCategories.Square => 5,
+            PztCategories.TerrainStairs => 6,
+            PztCategories.Parking => 7,
+            PztCategories.SemiPermeable => 8,
+            PztCategories.BioActive => 9,
             _ => 99
         };
     }

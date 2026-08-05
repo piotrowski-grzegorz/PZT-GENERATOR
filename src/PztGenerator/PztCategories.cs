@@ -5,7 +5,10 @@ public static class PztCategories
     public const string SiteBoundary = "Granica terenu";
     public const string Building = "Zabudowa";
     public const string AccessRoad = "Dojazdy";
+    public const string GroundSurface = "Powierzchnia gruntowa";
     public const string Walkway = "Dojscia";
+    public const string Square = "Place";
+    public const string TerrainStairs = "Schody terenowe";
     public const string Parking = "Parking";
     public const string BioActive = "Biologicznie czynna";
     public const string SemiPermeable = "Czesciowo biologicznie czynna";
@@ -17,7 +20,10 @@ public static class PztCategories
         SiteBoundary,
         Building,
         AccessRoad,
+        GroundSurface,
         Walkway,
+        Square,
+        TerrainStairs,
         Parking,
         BioActive,
         SemiPermeable
@@ -32,6 +38,8 @@ public static class PztCategories
     {
         return string.Equals(category, AccessRoad, StringComparison.OrdinalIgnoreCase) ||
                string.Equals(category, Walkway, StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(category, Square, StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(category, TerrainStairs, StringComparison.OrdinalIgnoreCase) ||
                string.Equals(category, Parking, StringComparison.OrdinalIgnoreCase);
     }
 }

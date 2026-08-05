@@ -4,14 +4,14 @@ Prototyp wtyczki do pelnej wersji Autodesk Revit 2025.03 wspierajacej bilans PZT
 
 Uwaga: Revit LT nie obsluguje klasycznych dodatkow Revit API, wiec PZT Generator nie zadziala pod Revit LT.
 
-GT-02 jest prototypem funkcjonalnym, a GT-03 stabilizuje kod i dokumentacje dla wersji `0.2.0`. Wersja `0.2.6-mvp-test` jest przeznaczona do testow wewnetrznych. To nie jest jeszcze wersja produkcyjna ani komercyjny instalator.
+GT-02 jest prototypem funkcjonalnym, a GT-03 stabilizuje kod i dokumentacje dla wersji `0.2.0`. Wersja `0.2.7-mvp-test` jest przeznaczona do testow wewnetrznych. To nie jest jeszcze wersja produkcyjna ani komercyjny instalator.
 
 Instrukcja dla testerow: `TESTER_GUIDE.md`.
 
 Paczka instalacyjna dla testerow:
 
 ```text
-dist/PztGenerator-0.2.6-mvp-test-installer.zip
+dist/PztGenerator-0.2.7-mvp-test-installer.zip
 ```
 
 ## Aktualny ribbon
@@ -103,7 +103,7 @@ Testy obejmuja:
 
 Najprostsza instalacja dla kolegi/testera:
 
-1. Przekaz paczke `dist/PztGenerator-0.2.6-mvp-test-installer.zip`.
+1. Przekaz paczke `dist/PztGenerator-0.2.7-mvp-test-installer.zip`.
 2. Tester rozpakowuje ZIP do dowolnego folderu.
 3. Tester klika `INSTALUJ_PZT_GENERATOR.bat`.
 4. Instalator pyta o sciezke folderu Revit 2025, np. `E:\Program Files\Autodesk\Revit 2025`.

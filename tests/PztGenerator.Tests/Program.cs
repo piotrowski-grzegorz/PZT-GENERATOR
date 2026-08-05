@@ -10,6 +10,7 @@ var tests = new (string Name, Action Run)[]
     ("MPZP validation reports min and max failures", MpzpValidationReportsFailures),
     ("Balance exposes automatic PBC and existing buildings", BalanceExposesAutomaticPbcAndExistingBuildings),
     ("Balance creates per-plot reports", BalanceCreatesPerPlotReports),
+    ("Ground surface is listed but does not reduce PBC", GroundSurfaceDoesNotReducePbc),
     ("DOCX export creates styled PAB tables", DocxExportCreatesStyledPabTables)
 };
 
@@ -118,6 +119,28 @@ static void BalanceCreatesPerPlotReports()
     AssertEqual(500, plotB.SiteAreaSquareMeters, 0.0001);
     AssertEqual(50, plotB.BuildingFootprintSquareMeters, 0.0001);
     AssertEqual(425, plotB.BioAreaSquareMeters, 0.0001);
+}static void GroundSurfaceDoesNotReducePbc()
+{
+    PztAreaItem[] items =
+    [
+        new(PztCategories.SiteBoundary, string.Empty, 1000, 0, 0, 0, "A"),
+        new(PztCategories.Building, "Projektowana", 200, 0, 1, 3, "A"),
+        new(PztCategories.AccessRoad, string.Empty, 100, 0, 0, 0, "A"),
+        new(PztCategories.GroundSurface, string.Empty, 80, 1, 0, 0, "A"),
+        new(PztCategories.Square, string.Empty, 20, 0, 0, 0, "A"),
+        new(PztCategories.TerrainStairs, string.Empty, 10, 0, 0, 0, "A")
+    ];
+
+    UrbanReport report = PztBalanceService.BuildUrbanReport(items, new MpzpRequirements(0, 0, 0, 0, 0), ParkingSettings.Default);
+    UrbanReport plotA = report.PlotReportsSafe.Single(plot => plot.PlotId == "A").Report;
+
+    AssertEqual(130, plotA.HardenedAreaSquareMeters, 0.0001);
+    AssertEqual(670, plotA.BioAreaSquareMeters, 0.0001);
+
+    AreaBalanceRow groundRow = plotA.Rows.FirstOrDefault(row => row.Category == PztCategories.GroundSurface)
+        ?? throw new InvalidOperationException("Expected ground surface row in plot balance.");
+
+    AssertEqual(80, groundRow.AreaSquareMeters, 0.0001);
 }
 static void MpzpValidationReportsFailures()
 {

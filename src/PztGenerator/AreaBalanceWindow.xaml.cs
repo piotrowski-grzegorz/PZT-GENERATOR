@@ -299,7 +299,7 @@ public sealed class AreaBalanceViewModel
         {
             builder.AppendLine();
             builder.AppendLine("Bilanse dzialek");
-            builder.AppendLine("Dzialka;Pow. dzialki [m2];Pow. zabudowy [m2];Wsk. zabudowy [%];Utwardzona [m2];PBC [m2];PBC [%];Intensywnosc");
+            builder.AppendLine("Dzialka;Pow. dzialki [m2];Zabudowa projektowana [m2];Zabudowa istniejaca [m2];Wsk. zabudowy [%];Dojazdy utwardzone [m2];Pow. gruntowa [m2];Dojscia [m2];Place [m2];Schody terenowe [m2];Parking [m2];Utwardzona razem [m2];PBC [m2];PBC [%];Intensywnosc");
 
             foreach (PlotBalanceReport plot in report.PlotReportsSafe)
             {
@@ -308,8 +308,15 @@ public sealed class AreaBalanceViewModel
                     ";",
                     EscapeCsv(plot.PlotId),
                     FormatNumber(plotReport.SiteAreaSquareMeters),
-                    FormatNumber(plotReport.BuildingFootprintSquareMeters),
+                    FormatNumber(GetRowArea(plotReport, PztCategories.Building, "Projektowana")),
+                    FormatNumber(GetRowArea(plotReport, PztCategories.Building, "Istniejaca")),
                     FormatNumber(plotReport.BuildingCoveragePercent),
+                    FormatNumber(GetRowArea(plotReport, PztCategories.AccessRoad)),
+                    FormatNumber(GetRowArea(plotReport, PztCategories.GroundSurface)),
+                    FormatNumber(GetRowArea(plotReport, PztCategories.Walkway)),
+                    FormatNumber(GetRowArea(plotReport, PztCategories.Square)),
+                    FormatNumber(GetRowArea(plotReport, PztCategories.TerrainStairs)),
+                    FormatNumber(plotReport.ParkingAreaSquareMeters),
                     FormatNumber(plotReport.HardenedAreaSquareMeters),
                     FormatNumber(plotReport.BioAreaSquareMeters),
                     FormatNumber(plotReport.BioPercent),
@@ -349,6 +356,14 @@ public sealed class AreaBalanceViewModel
         return value.ToString("N2", CultureInfo.CurrentCulture);
     }
 
+    private static double GetRowArea(UrbanReport report, string category, string? status = null)
+    {
+        return report.Rows
+            .Where(row => string.Equals(row.Category, category, StringComparison.OrdinalIgnoreCase))
+            .Where(row => status is null || string.Equals(row.Status, status, StringComparison.OrdinalIgnoreCase))
+            .Sum(row => row.AreaSquareMeters);
+    }
+
     private static string EscapeCsv(string value)
     {
         if (!value.Contains(';') && !value.Contains('"') && !value.Contains('\n') && !value.Contains('\r'))
@@ -379,8 +394,15 @@ public sealed class PlotBalanceViewModel
         PlotId = plot.PlotId;
         UrbanReport report = plot.Report;
         SiteAreaText = AreaBalanceViewModel.FormatSquareMeters(report.SiteAreaSquareMeters);
-        BuildingFootprintText = AreaBalanceViewModel.FormatSquareMeters(report.BuildingFootprintSquareMeters);
+        ProjectedBuildingText = AreaBalanceViewModel.FormatSquareMeters(GetArea(report, PztCategories.Building, "Projektowana"));
+        ExistingBuildingText = AreaBalanceViewModel.FormatSquareMeters(GetArea(report, PztCategories.Building, "Istniejaca"));
         BuildingCoverageText = report.SiteAreaSquareMeters > 0 ? $"{report.BuildingCoveragePercent:N2}%" : "-";
+        AccessRoadText = AreaBalanceViewModel.FormatSquareMeters(GetArea(report, PztCategories.AccessRoad));
+        GroundSurfaceText = AreaBalanceViewModel.FormatSquareMeters(GetArea(report, PztCategories.GroundSurface));
+        WalkwayText = AreaBalanceViewModel.FormatSquareMeters(GetArea(report, PztCategories.Walkway));
+        SquareText = AreaBalanceViewModel.FormatSquareMeters(GetArea(report, PztCategories.Square));
+        TerrainStairsText = AreaBalanceViewModel.FormatSquareMeters(GetArea(report, PztCategories.TerrainStairs));
+        ParkingAreaText = AreaBalanceViewModel.FormatSquareMeters(report.ParkingAreaSquareMeters);
         HardenedAreaText = AreaBalanceViewModel.FormatSquareMeters(report.HardenedAreaSquareMeters);
         BioAreaText = AreaBalanceViewModel.FormatSquareMeters(report.BioAreaSquareMeters);
         BioPercentText = report.SiteAreaSquareMeters > 0 ? $"{report.BioPercent:N2}%" : "-";
@@ -394,9 +416,23 @@ public sealed class PlotBalanceViewModel
 
     public string SiteAreaText { get; }
 
-    public string BuildingFootprintText { get; }
+    public string ProjectedBuildingText { get; }
+
+    public string ExistingBuildingText { get; }
 
     public string BuildingCoverageText { get; }
+
+    public string AccessRoadText { get; }
+
+    public string GroundSurfaceText { get; }
+
+    public string WalkwayText { get; }
+
+    public string SquareText { get; }
+
+    public string TerrainStairsText { get; }
+
+    public string ParkingAreaText { get; }
 
     public string HardenedAreaText { get; }
 
@@ -407,6 +443,14 @@ public sealed class PlotBalanceViewModel
     public string IntensityText { get; }
 
     public string NotesText { get; }
+
+    private static double GetArea(UrbanReport report, string category, string? status = null)
+    {
+        return report.Rows
+            .Where(row => string.Equals(row.Category, category, StringComparison.OrdinalIgnoreCase))
+            .Where(row => status is null || string.Equals(row.Status, status, StringComparison.OrdinalIgnoreCase))
+            .Sum(row => row.AreaSquareMeters);
+    }
 }
 public sealed class PztTypeSettingsViewModel
 {
@@ -579,6 +623,11 @@ public sealed class AreaBalanceRowViewModel
         if (string.Equals(row.Category, PztCategories.SiteBoundary, StringComparison.OrdinalIgnoreCase))
         {
             return "Baza do PBC";
+        }
+
+        if (string.Equals(row.Category, PztCategories.GroundSurface, StringComparison.OrdinalIgnoreCase))
+        {
+            return "Dojazd/teren gruntowy - nie pomniejsza PBC";
         }
 
         if (string.Equals(row.Category, PztCategories.SemiPermeable, StringComparison.OrdinalIgnoreCase))

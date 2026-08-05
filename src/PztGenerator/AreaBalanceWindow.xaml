@@ -130,15 +130,22 @@
                               HeadersVisibility="Column"
                               GridLinesVisibility="Horizontal">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Dzialka" Binding="{Binding PlotId}" Width="110" />
-                            <DataGridTextColumn Header="Pow. dzialki" Binding="{Binding SiteAreaText}" Width="130" />
-                            <DataGridTextColumn Header="Zabudowa" Binding="{Binding BuildingFootprintText}" Width="130" />
+                            <DataGridTextColumn Header="Dzialka" Binding="{Binding PlotId}" Width="90" />
+                            <DataGridTextColumn Header="Pow. dzialki" Binding="{Binding SiteAreaText}" Width="120" />
+                            <DataGridTextColumn Header="Zab. proj." Binding="{Binding ProjectedBuildingText}" Width="110" />
+                            <DataGridTextColumn Header="Zab. istn." Binding="{Binding ExistingBuildingText}" Width="110" />
                             <DataGridTextColumn Header="Wsk. zab." Binding="{Binding BuildingCoverageText}" Width="90" />
-                            <DataGridTextColumn Header="Utwardzona" Binding="{Binding HardenedAreaText}" Width="120" />
-                            <DataGridTextColumn Header="PBC" Binding="{Binding BioAreaText}" Width="130" />
-                            <DataGridTextColumn Header="PBC %" Binding="{Binding BioPercentText}" Width="90" />
-                            <DataGridTextColumn Header="Intens." Binding="{Binding IntensityText}" Width="80" />
-                            <DataGridTextColumn Header="Uwagi" Binding="{Binding NotesText}" Width="*" />
+                            <DataGridTextColumn Header="Dojazdy utw." Binding="{Binding AccessRoadText}" Width="110" />
+                            <DataGridTextColumn Header="Pow. gruntowa" Binding="{Binding GroundSurfaceText}" Width="120" />
+                            <DataGridTextColumn Header="Dojscia" Binding="{Binding WalkwayText}" Width="100" />
+                            <DataGridTextColumn Header="Place" Binding="{Binding SquareText}" Width="100" />
+                            <DataGridTextColumn Header="Schody ter." Binding="{Binding TerrainStairsText}" Width="105" />
+                            <DataGridTextColumn Header="Parking" Binding="{Binding ParkingAreaText}" Width="100" />
+                            <DataGridTextColumn Header="Utwardz. razem" Binding="{Binding HardenedAreaText}" Width="115" />
+                            <DataGridTextColumn Header="PBC" Binding="{Binding BioAreaText}" Width="120" />
+                            <DataGridTextColumn Header="PBC %" Binding="{Binding BioPercentText}" Width="80" />
+                            <DataGridTextColumn Header="Intens." Binding="{Binding IntensityText}" Width="70" />
+                            <DataGridTextColumn Header="Uwagi" Binding="{Binding NotesText}" Width="170" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </DockPanel>
